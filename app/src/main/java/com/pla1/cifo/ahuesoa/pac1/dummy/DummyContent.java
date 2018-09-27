@@ -1,9 +1,12 @@
 package com.pla1.cifo.ahuesoa.pac1.dummy;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.lang.Integer.valueOf;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -36,37 +39,44 @@ public class DummyContent {
 
     private static void addItem(DummyItem item) {
         ITEMS.add(item);
-        ITEM_MAP.put(item.id, item);
+        ITEM_MAP.put(item.identificador, item);
     }
 
     private static DummyItem createDummyItem(int position) {
-        return new DummyItem(String.valueOf(position), "Title" + position, makeDetails(position));
+        return new DummyItem(valueOf(position).toString(), "Title " + position, "autor "+position,"Fecha Publicacion " +position, "Descripcion "+position,
+                "urlImagen "+position);
     }
 
+    /*
     private static String makeDetails(int position) {
         StringBuilder builder = new StringBuilder();
         builder.append("Details about Item: ").append(position);
         builder.append("\nMore details information here.");
         return builder.toString();
     }
-
+*/
     /**
      * A dummy item representing a piece of content.
      */
     public static class DummyItem {
-        public final String id;
-        public final String content;
-        public final String details;
+        public String identificador;
+        public String titulo;
+        public String autor;
+        public String publicacionFecha;
+        public String descripcion;
+        public String urlImagen;
 
-        public DummyItem(String id, String content, String details) {
-            this.id = id;
-            this.content = content;
-            this.details = details;
+        public DummyItem(String identificador,String titulo, String autor,String publicacionFecha, String descripcion,String urlImagen) {
+            this.identificador=identificador;
+            this.titulo=titulo;
+            this.autor=autor;
+            this.publicacionFecha=publicacionFecha;
+            this.descripcion=descripcion;
+            this.urlImagen=urlImagen;
         }
 
-        @Override
-        public String toString() {
-            return content;
+        public String dummyBookToString() {
+            return titulo+"\n"+autor+"\n"+publicacionFecha+"\n"+descripcion+"\n"+urlImagen+"\n";
         }
     }
 }
