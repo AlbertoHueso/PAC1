@@ -81,7 +81,7 @@ public class BookListActivity extends AppCompatActivity {
                 DummyContent.DummyItem item = (DummyContent.DummyItem) view.getTag();
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putString(BookDetailFragment.ARG_ITEM_ID, item.id);
+                    arguments.putString(BookDetailFragment.ARG_ITEM_ID, item.identificador);
                     BookDetailFragment fragment = new BookDetailFragment();
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -90,7 +90,7 @@ public class BookListActivity extends AppCompatActivity {
                 } else {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, BookDetailActivity.class);
-                    intent.putExtra(BookDetailFragment.ARG_ITEM_ID, item.id);
+                    intent.putExtra(BookDetailFragment.ARG_ITEM_ID, item.identificador);
 
                     context.startActivity(intent);
                 }
@@ -117,7 +117,9 @@ public class BookListActivity extends AppCompatActivity {
 
 
             //holder.mIdView.setText(mValues.get(position).id); Eliminamos La posición
-            holder.mContentView.setText(mValues.get(position).content);
+
+            //Mostramos únicamente el título
+            holder.mContentView.setText(mValues.get(position).titulo);
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
