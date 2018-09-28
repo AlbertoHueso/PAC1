@@ -112,13 +112,13 @@ public class BookListActivity extends AppCompatActivity {
             return new ViewHolder(view);
         }
 
+
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
 
-
+            //Mostramos el título en el id
             holder.mIdView.setText(mValues.get(position).titulo);
-
-            //Mostramos únicamente el título
+            //Mostramos el autor en el content
             holder.mContentView.setText(mValues.get(position).autor);
 
             holder.itemView.setTag(mValues.get(position));
