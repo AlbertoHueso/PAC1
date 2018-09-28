@@ -116,10 +116,10 @@ public class BookListActivity extends AppCompatActivity {
         public void onBindViewHolder(final ViewHolder holder, int position) {
 
 
-            //holder.mIdView.setText(mValues.get(position).id); Eliminamos La posición
+            holder.mIdView.setText(mValues.get(position).titulo);
 
             //Mostramos únicamente el título
-            holder.mContentView.setText(mValues.get(position).titulo);
+            holder.mContentView.setText(mValues.get(position).autor);
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);

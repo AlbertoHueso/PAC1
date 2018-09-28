@@ -47,14 +47,7 @@ public class DummyContent {
                 "urlImagen "+position);
     }
 
-    /*
-    private static String makeDetails(int position) {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Details about Item: ").append(position);
-        builder.append("\nMore details information here.");
-        return builder.toString();
-    }
-*/
+
     /**
      * A dummy item representing a piece of content.
      */
@@ -75,6 +68,10 @@ public class DummyContent {
             this.urlImagen=urlImagen;
         }
 
+        /**
+         * Convierte un DummyBook en un String con el título, autor, publicacionFecha, descripción y url de la imagen
+         * @return String con los datos del libro
+         */
         public String dummyBookToString() {
             return titulo+"\n"+autor+"\n"+publicacionFecha+"\n"+descripcion+"\n"+urlImagen+"\n";
         }
