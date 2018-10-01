@@ -5,8 +5,9 @@
     android:layout_marginTop="2dp"
     android:layout_marginLeft="10dp"
     android:layout_marginRight="10dp"
-    android:background="#eeeeee"
-    android:padding="15dp"
+    android:paddingLeft="15dp"
+    android:paddingTop="15dp"
+    android:paddingRight="15dp"
     android:orientation="vertical">
 
     <TextView
