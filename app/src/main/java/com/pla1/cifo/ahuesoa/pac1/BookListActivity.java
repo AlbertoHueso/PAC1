@@ -105,7 +105,16 @@ public class BookListActivity extends AppCompatActivity {
             mTwoPane = twoPane;
         }
 
+
+        /**
+         * Método que al crear el ViewHolder asigna un layout book_list_content_odd si viewType es 0 y book_list_content_even en cualquier otro caso
+         * @param parent
+         * @param viewType
+         * @return Viewholder con el layout asignado en función de su viewType
+         * @see #getItemViewType(int)
+         */
         @Override
+
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View view;
             switch (viewType) {
