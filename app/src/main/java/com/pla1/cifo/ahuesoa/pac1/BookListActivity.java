@@ -111,7 +111,10 @@ public class BookListActivity extends AppCompatActivity {
          * @param parent
          * @param viewType
          * @return Viewholder con el layout asignado en función de su viewType
+<<<<<<< HEAD
          * @see #getItemViewType(int)
+=======
+>>>>>>> aedf08be715f5078209bedc9b6cf22de11dac69e
          */
         @Override
 
