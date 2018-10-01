@@ -107,9 +107,37 @@ public class BookListActivity extends AppCompatActivity {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.book_list_content, parent, false);
-            return new ViewHolder(view);
+            View view;
+            switch (viewType) {
+
+                case 0:
+                    view = LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.book_list_content_odd, parent, false);
+                    break;
+
+
+                default:
+                    view = LayoutInflater.from(parent.getContext())
+                            .inflate(R.layout.book_list_content_even, parent, false);
+
+
+            }
+
+            ViewHolder holder = new ViewHolder(view);
+
+            return holder;
+        }
+
+
+
+        /**
+         * Sobreescribimos el método getItemType para distinguir filas pares e impares
+         * @param position
+         * @return 0 si la posicion es par
+         */
+        @Override
+        public int getItemViewType(int position) {
+            return position % 2;
         }
 
 
