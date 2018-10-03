@@ -20,12 +20,12 @@ public class DummyContent {
     /**
      * An array of sample (dummy) items.
      */
-    public static final List<DummyItem> ITEMS = new ArrayList<DummyItem>();
+    public static final List<DummyBook> ITEMS = new ArrayList<DummyBook>();
 
     /**
      * A map of sample (dummy) items, by ID.
      */
-    public static final Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
+    public static final Map<String, DummyBook> ITEM_MAP = new HashMap<String, DummyBook>();
 
 
 
@@ -38,21 +38,21 @@ public class DummyContent {
         }
     }
 
-    private static void addItem(DummyItem item) {
+    private static void addItem(DummyBook item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.identificador, item);
     }
 
-    private static DummyItem createDummyItem(int position) {
-        return new DummyItem(valueOf(position).toString(), "Title " + position, "author "+position, "Descripcion "+position,
+    private static DummyBook createDummyItem(int position) {
+        return new DummyBook(valueOf(position).toString(), "Title " + position, "author "+position, "Descripcion "+position,
                 "urlImagen "+position);
     }
 
 
     /**
-     * A dummy item representing a piece of content.
+     *Clase que representa cada libro de la lista Dummy para rellenar por defecto
      */
-    public static class DummyItem {
+    public static class DummyBook {
         public String identificador;
         public String titulo;
         public String autor;
@@ -60,25 +60,19 @@ public class DummyContent {
         public String descripcion;
         public String urlImagen;
 
-        public DummyItem(String identificador,String titulo, String autor, String descripcion,String urlImagen) {
+        public DummyBook(String identificador, String titulo, String autor, String descripcion, String urlImagen) {
             this.identificador=identificador;
             this.titulo=titulo;
             this.autor=autor;
-            this.publicacionFecha=getDate();
+            this.publicacionFecha=getDate(); //Como solo es una muestra asignamos la fecha actual
             this.descripcion=descripcion;
             this.urlImagen=urlImagen;
         }
 
-        /**
-         * Convierte un DummyBook en un String con el título, autor, publicacionFecha, descripción y url de la imagen
-         * @return String con los datos del libro
-         */
-        public String dummyBookToString() {
-            return titulo+"\n"+autor+"\n"+publicacionFecha+"\n"+descripcion+"\n"+urlImagen+"\n";
-        }
+
 
         /**
-         * Obtiene un String con la fecha y hora en el formato yyyy_MM_dd_HH_mm_ss
+         * Obtiene un String con la fecha y hora en el formato dd/MM/yyyy
          * @return String con fecha y hora
          */
         public  static String getDate(){

@@ -1,7 +1,6 @@
 package com.pla1.cifo.ahuesoa.pac1;
 
 import android.app.Activity;
-import android.media.Image;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +11,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
+
+
+
 
 /**
  * A fragment representing a single Item detail screen.
@@ -29,7 +31,7 @@ public class BookDetailFragment extends Fragment {
     /**
      * The dummy content this fragment is presenting.
      */
-    private DummyContent.DummyItem mItem;
+    private DummyContent.DummyBook mItem;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -56,6 +58,14 @@ public class BookDetailFragment extends Fragment {
         }
     }
 
+
+    /**
+     * Retorna una vista con el contenido Dummy en el layout book_detail
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return View con el contenido dummy
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -66,8 +76,14 @@ public class BookDetailFragment extends Fragment {
             ((TextView) rootView.findViewById(R.id.author)).setText(mItem.autor);
             ((TextView) rootView.findViewById(R.id.publish_date)).setText(mItem.publicacionFecha);
             ((TextView) rootView.findViewById(R.id.description)).setText(mItem.descripcion);
-           ImageView imagen=rootView.findViewById(R.id.portada);        //Obtenemos la imagen
-           imagen.setImageResource(R.drawable.juego_ender);             //Asignamos la url de la imagen
+           ImageView imagen=rootView.findViewById(R.id.portada);        //Obtenemos elcontenedor de la imagen imagen
+
+            //obtenemos la url de la imagen, en funcion del identificador de cada dummyitem
+            int img = getResources().getIdentifier("@drawable/juego_ender"+ mItem.identificador, "drawable",getContext().getPackageName());
+
+            //Asignamos al contenedor de la imagen la imagen del archivo directorio drawable
+            imagen.setImageResource(img);
+            //imagen.setImageResource(R.drawable.juego_ender); Sería el método para añadir directamente una imagen, sin parametrizar
         }
 
         return rootView;
