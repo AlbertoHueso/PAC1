@@ -1,12 +1,14 @@
 package com.pla1.cifo.ahuesoa.pac1;
 
 import android.app.Activity;
+import android.media.Image;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
@@ -59,10 +61,13 @@ public class BookDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.book_detail, container, false);
 
-        // Show the dummy content as text in a TextView.
+        // Mostramos el contenido Dummy
         if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.item_detail)).setText(mItem.dummyBookToString());
-
+            ((TextView) rootView.findViewById(R.id.author)).setText(mItem.autor);
+            ((TextView) rootView.findViewById(R.id.publish_date)).setText(mItem.publicacionFecha);
+            ((TextView) rootView.findViewById(R.id.description)).setText(mItem.descripcion);
+           ImageView imagen=rootView.findViewById(R.id.portada);        //Obtenemos la imagen
+           imagen.setImageResource(R.drawable.juego_ender);             //Asignamos la url de la imagen
         }
 
         return rootView;

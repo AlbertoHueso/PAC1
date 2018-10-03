@@ -28,7 +28,7 @@ public class DummyContent {
 
 
 
-    private static final int COUNT = 10;
+    private static final int COUNT = 5;
 
     static {
         // Add some sample items.
@@ -43,7 +43,7 @@ public class DummyContent {
     }
 
     private static DummyItem createDummyItem(int position) {
-        return new DummyItem(valueOf(position).toString(), "Title " + position, "autor "+position,"Fecha Publicacion " +position, "Descripcion "+position,
+        return new DummyItem(valueOf(position).toString(), "Title " + position, "author "+position,"Fecha Publicacion " +position, "Descripcion "+position,
                 "urlImagen "+position);
     }
 
