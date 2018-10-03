@@ -1,12 +1,13 @@
 package com.pla1.cifo.ahuesoa.pac1.dummy;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import static java.lang.Integer.valueOf;
+import java.text.SimpleDateFormat;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -43,7 +44,7 @@ public class DummyContent {
     }
 
     private static DummyItem createDummyItem(int position) {
-        return new DummyItem(valueOf(position).toString(), "Title " + position, "author "+position,"Fecha Publicacion " +position, "Descripcion "+position,
+        return new DummyItem(valueOf(position).toString(), "Title " + position, "author "+position, "Descripcion "+position,
                 "urlImagen "+position);
     }
 
@@ -59,11 +60,11 @@ public class DummyContent {
         public String descripcion;
         public String urlImagen;
 
-        public DummyItem(String identificador,String titulo, String autor,String publicacionFecha, String descripcion,String urlImagen) {
+        public DummyItem(String identificador,String titulo, String autor, String descripcion,String urlImagen) {
             this.identificador=identificador;
             this.titulo=titulo;
             this.autor=autor;
-            this.publicacionFecha=publicacionFecha;
+            this.publicacionFecha=getDate();
             this.descripcion=descripcion;
             this.urlImagen=urlImagen;
         }
@@ -74,6 +75,18 @@ public class DummyContent {
          */
         public String dummyBookToString() {
             return titulo+"\n"+autor+"\n"+publicacionFecha+"\n"+descripcion+"\n"+urlImagen+"\n";
+        }
+
+        /**
+         * Obtiene un String con la fecha y hora en el formato yyyy_MM_dd_HH_mm_ss
+         * @return String con fecha y hora
+         */
+        public  static String getDate(){
+            DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            Date date=new Date();
+            String fecha=sdf.format(date);
+            return fecha;
+
         }
     }
 }
