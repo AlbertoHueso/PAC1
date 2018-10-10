@@ -29,5 +29,6 @@
                 android:value="com.pla1.cifo.ahuesoa.pac1.BookListActivity" />
         </activity>
     </application>
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
