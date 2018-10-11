@@ -58,8 +58,8 @@ public class BookListActivity extends AppCompatActivity {
 
         //Usuario y clave prueba
 
-        String email="albertohueso@gmail.com";
-        String password="holahola";
+        String email="who@car.es";
+        String password="whocares";
 
 
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
