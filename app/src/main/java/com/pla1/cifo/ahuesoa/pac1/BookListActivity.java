@@ -52,65 +52,69 @@ public class BookListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_book_list);
 
 
+        //Autorización
 
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                    //Creamos una instancia  FirebaseAuth
+                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
+                    //Usuario y clave prueba
 
-        //Usuario y clave prueba
+                    String email="who@car.es";
+                    String password="whocares";
 
-        String email="who@car.es";
-        String password="whocares";
-
-
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
-        {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task)
-            {
-                if (task.isSuccessful())
-                {
-                    Log.w("LoginSuccess", "signInWithEmail:success");
-
-                }
-
-                else
-                {
-                    Log.w("failureLogin", "signInWithEmail:failure", task.getException());
-
-                }
-                if (!task.isSuccessful())
-                {
-                   Log.w("noSuccessfullogin","no success");
-                }
-
-            }
-        });
+                    //Registro con correo y clave
+                    mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+                    {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task)
+                        {
+                            if (task.isSuccessful())
+                            {
+                                Log.d("LoginSuccess", "signInWithEmail:success");
 
 
+                            }
 
+                            else
+                            {
+                                Log.e("failureLogin", "signInWithEmail:failure", task.getException());
+
+                            }
+                            if (!task.isSuccessful())
+                            {
+                               Log.e("noSuccessfullogin","no success");
+                            }
+
+                        }
+                    });
+
+
+        //Conexión a la base de datos y creación de la referencia
         FirebaseDatabase database=FirebaseDatabase.getInstance();
-        DatabaseReference myRef=database.getReference();
+        DatabaseReference myRef=database.getReference("books");
 
-        // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
+        // Leemos de la base de datos
+                    //Abrimos escuchador de eventos
+                    myRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
 
-                /*
-                String value = dataSnapshot.getValue(String.class);
-                Log.d("prova1", "Value is: " + value);*/
+                            //Log.d("Libros", dataSnapshot.toString());
 
-                Log.d("Libros", dataSnapshot.toString());
-            }
+                           for(DataSnapshot ds: dataSnapshot.getChildren()){
+                               Log.d("titulo", ds.child("title").toString());
+                               Log.d("autor", ds.child("author").toString());
+                               Log.d("description", ds.child("description").toString());
+                               Log.d("date", ds.child("publication_date").toString());
+                           }
+                        }
 
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w("prova2", "Failed to read value.", error.toException());
-            }
-        });
+                        @Override
+                        public void onCancelled(DatabaseError error) {
+                            // Failed to read value
+                            Log.e("prova2", "Failed to read value.", error.toException());
+                        }
+                    });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
