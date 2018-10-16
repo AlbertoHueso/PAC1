@@ -18,7 +18,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -55,12 +57,17 @@ public class BookListActivity extends AppCompatActivity {
         //Autorización
 
                     //Creamos una instancia  FirebaseAuth
-                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                    final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                    mAuth.signOut();
 
                     //Usuario y clave prueba
 
-                    String email="who@car.es";
-                    String password="whocares";
+                    //String email="who@car.es";
+                    //String password="whocares";
+
+                    String email="who1@car.es";
+                    String password="whoreallycares";
+
 
                     //Registro con correo y clave
                     mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
@@ -70,7 +77,10 @@ public class BookListActivity extends AppCompatActivity {
                         {
                             if (task.isSuccessful())
                             {
-                                Log.d("LoginSuccess", "signInWithEmail:success");
+                                 mAuth.getCurrentUser().reload();
+
+
+                                Log.d("LoginSuccess", "signInWithEmail:success :"+mAuth.getCurrentUser().getUid());
 
 
                             }
@@ -99,8 +109,7 @@ public class BookListActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            //Log.d("Libros", dataSnapshot.toString());
-
+                            //Bucle que recorre la base de datos y muestra los datos de cada libro
                            for(DataSnapshot ds: dataSnapshot.getChildren()){
                                Log.d("titulo", ds.child("title").toString());
                                Log.d("autor", ds.child("author").toString());
@@ -112,7 +121,7 @@ public class BookListActivity extends AppCompatActivity {
                         @Override
                         public void onCancelled(DatabaseError error) {
                             // Failed to read value
-                            Log.e("prova2", "Failed to read value.", error.toException());
+                            Log.e("lecturaError", "Failed to read value.", error.toException());
                         }
                     });
 
