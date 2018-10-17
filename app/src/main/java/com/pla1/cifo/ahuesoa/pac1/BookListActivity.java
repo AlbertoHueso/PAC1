@@ -47,6 +47,15 @@ public class BookListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
+     FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        mAuth.signOut();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +66,7 @@ public class BookListActivity extends AppCompatActivity {
         //Autorización
 
                     //Creamos una instancia  FirebaseAuth
-                    final FirebaseAuth mAuth = FirebaseAuth.getInstance();
-                    mAuth.signOut();
+
 
                     //Usuario y clave prueba
 
@@ -99,7 +107,7 @@ public class BookListActivity extends AppCompatActivity {
                     });
 
 
-        //Conexión a la base de datos y creación de la referencia
+        //Conexión a la base de datos y creación de la referencia 
         FirebaseDatabase database=FirebaseDatabase.getInstance();
         DatabaseReference myRef=database.getReference("books");
 

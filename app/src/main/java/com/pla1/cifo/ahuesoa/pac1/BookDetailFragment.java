@@ -50,11 +50,7 @@ public class BookDetailFragment extends Fragment {
             // to load content from a content provider.
             mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
 
-            Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
-            if (appBarLayout != null) {
-                appBarLayout.setTitle(mItem.titulo);
-            }
+
         }
     }
 
@@ -85,7 +81,11 @@ public class BookDetailFragment extends Fragment {
             imagen.setImageResource(img);
             //imagen.setImageResource(R.drawable.juego_ender); Sería el método para añadir directamente una imagen, sin parametrizar
         }
-
+        Activity activity = this.getActivity();
+        CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
+        if (appBarLayout != null) {
+            appBarLayout.setTitle(mItem.titulo);
+        }
         return rootView;
     }
 }
