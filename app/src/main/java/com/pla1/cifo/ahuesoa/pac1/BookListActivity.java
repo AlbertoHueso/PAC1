@@ -47,14 +47,14 @@ public class BookListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
-     FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();  //Creamos una instancia FirebaseAuth para hacer la autentificación
+    private boolean conexion=false; //Variable para guardar si la conexión se ha realizado o no.
 
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        mAuth.signOut();
+
+
     }
 
     @Override
@@ -63,48 +63,16 @@ public class BookListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_book_list);
 
 
-        //Autorización
 
-                    //Creamos una instancia  FirebaseAuth
+        //Tratamos de conectar
 
+        String email="who1@car.es";
+        String password="whoreallycares";
 
-                    //Usuario y clave prueba
-
-                    //String email="who@car.es";
-                    //String password="whocares";
-
-                    String email="who1@car.es";
-                    String password="whoreallycares";
+        connection(email, password);
 
 
-                    //Registro con correo y clave
-                    mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
-                    {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task)
-                        {
-                            if (task.isSuccessful())
-                            {
-                                 mAuth.getCurrentUser().reload();
 
-
-                                Log.d("LoginSuccess", "signInWithEmail:success :"+mAuth.getCurrentUser().getUid());
-
-
-                            }
-
-                            else
-                            {
-                                Log.e("failureLogin", "signInWithEmail:failure", task.getException());
-
-                            }
-                            if (!task.isSuccessful())
-                            {
-                               Log.e("noSuccessfullogin","no success");
-                            }
-
-                        }
-                    });
 
 
         //Conexión a la base de datos y creación de la referencia 
@@ -271,5 +239,39 @@ public class BookListActivity extends AppCompatActivity {
                 mContentView = (TextView) view.findViewById(R.id.content);
             }
         }
+    }
+
+    /**
+     * Método para realizar la conexión a Firebase con un email y password. Actualiza el valor booleano de conexion según se haya conseguido o no
+     * @param email   email del usuario
+     * @param password clave del usuario
+     */
+    private void connection(String email, String password){
+
+
+        //Registro con correo y clave
+        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
+        {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task)
+            {
+                if (task.isSuccessful())
+                {
+                    conexion=true;//Actualizamos el valor de la conexion
+                    Log.d("LoginSuccess", "signInWithEmail:success :"+mAuth.getCurrentUser().getUid());
+
+                }
+
+                else
+                {
+                    Log.e("failureLogin", "signInWithEmail:failure", task.getException());
+                    Log.e("noSuccessfullogin","no success");
+                    mAuth.signOut();//Desconectamos el usuario
+                }
+
+
+            }
+        });
+
     }
 }
