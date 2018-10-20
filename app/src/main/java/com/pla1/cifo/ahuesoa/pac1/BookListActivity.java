@@ -25,6 +25,7 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
 
+import java.util.Iterator;
 import java.util.List;
 
 import model.BookItem;
@@ -78,6 +79,7 @@ public class BookListActivity extends AppCompatActivity {
 
         MyAuthoritation co=new MyAuthoritation(email,password,this);
 
+        //Se hacen dos intentos para evitar un problema si se ha desconectado el usuario previamente
         if (!co.connection()){
             if (!co.connection())
             loadItemList(DummyContent.ITEMS);
@@ -127,6 +129,9 @@ public class BookListActivity extends AppCompatActivity {
 
                                 //Cargamos los libros en la vista
                                 loadItemList(books);
+
+                                //Actualizamos sus identificadores
+                                updateIdentificators(books);
 
 
                             }catch (Exception e){
@@ -288,10 +293,30 @@ public class BookListActivity extends AppCompatActivity {
             }
         }
     }
+
+    /**
+     * Método que carga una lista de libros en la vista de la página
+     * @param books
+     */
     private void loadItemList(List<BookItem> books){
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView,books);
     }
 
+
+    /**
+     * Método que a cada libro de una lista le asigna como identificador su posición+1
+     * @param books
+     */
+    private void updateIdentificators(List<BookItem> books){
+
+        int identificador=1;
+        Iterator<BookItem> it=books.iterator();
+        while (it.hasNext()){
+            it.next().setIdentificador(identificador);
+            identificador++;
+        }
+
+    }
 }
