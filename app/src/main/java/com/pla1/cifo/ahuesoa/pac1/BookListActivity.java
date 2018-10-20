@@ -16,13 +16,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-
-import com.google.firebase.auth.AuthResult;
-
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -64,18 +58,19 @@ public class BookListActivity extends AppCompatActivity {
 
 
 
-        //Tratamos de conectar
+        //Tratamos de autorizar
 
         String email="who1@car.es";
         String password="whoreallycares";
 
-        connection(email, password);
+        MyAuthoritation conexion=new MyAuthoritation(email,password,this);
+        conexion.connection();
 
 
 
 
 
-        //Conexión a la base de datos y creación de la referencia 
+        //Conexión a la base de datos y creación de la referencia
         FirebaseDatabase database=FirebaseDatabase.getInstance();
         DatabaseReference myRef=database.getReference("books");
 
@@ -241,37 +236,5 @@ public class BookListActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Método para realizar la conexión a Firebase con un email y password. Actualiza el valor booleano de conexion según se haya conseguido o no
-     * @param email   email del usuario
-     * @param password clave del usuario
-     */
-    private void connection(String email, String password){
 
-
-        //Registro con correo y clave
-        mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>()
-        {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task)
-            {
-                if (task.isSuccessful())
-                {
-                    conexion=true;//Actualizamos el valor de la conexion
-                    Log.d("LoginSuccess", "signInWithEmail:success :"+mAuth.getCurrentUser().getUid());
-
-                }
-
-                else
-                {
-                    Log.e("failureLogin", "signInWithEmail:failure", task.getException());
-                    Log.e("noSuccessfullogin","no success");
-                    mAuth.signOut();//Desconectamos el usuario
-                }
-
-
-            }
-        });
-
-    }
 }
