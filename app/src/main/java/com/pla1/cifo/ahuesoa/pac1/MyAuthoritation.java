@@ -10,7 +10,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 /**
- * Clase que se ocupa de realizar la conexión a Firebase, la autorizacion
+ * Clase que se ocupa de realizar la autorizacion a Firebase
  */
 public class MyAuthoritation {
     /*Correo con el que se autorizará*/

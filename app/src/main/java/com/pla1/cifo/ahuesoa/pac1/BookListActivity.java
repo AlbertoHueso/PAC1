@@ -21,6 +21,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
 
@@ -43,9 +44,19 @@ public class BookListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
-    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();  //Creamos una instancia FirebaseAuth para hacer la autentificación
-    private boolean conexion=false; //Variable para guardar si la conexión se ha realizado o no.
 
+    /**
+     * Variable FirebaseAuth para hacer la autenticacion
+     */
+    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();  //Creamos una instancia FirebaseAuth para hacer la autentificación
+    /**
+     * Guarda si se ha producido la conexión o no
+     */
+    private boolean conexion=false; //Variable para guardar si la conexión se ha realizado o no.
+    /**
+     * Variable que guarda los libros cargados en memoria para mostrar
+     */
+    List<BookItem> books=null;
     @Override
     public void onStart() {
         super.onStart();
@@ -82,7 +93,8 @@ public class BookListActivity extends AppCompatActivity {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            //Bucle que recorre la base de datos y muestra los datos de cada libro
+                            /*
+                            //Bucle que recorre la base de datos, muestra los datos de cada libro y  guarda cada unoen objetos BookItem
                            for(DataSnapshot ds: dataSnapshot.getChildren()){
                                Log.d("titulo", ds.child("title").toString());
                                Log.d("autor", ds.child("author").toString());
@@ -91,13 +103,24 @@ public class BookListActivity extends AppCompatActivity {
                                Log.d("key",ds.getKey().toString());
 
                                try {
+                                   //Obtenemos un libro
                                    BookItem book = ds.getValue(BookItem.class);
                                }
                                catch (EnumConstantNotPresentException e){
-                                   Log.e("granError",ds.getKey().toString());
+                                   System.err.println(e.getMessage());
                                }
                            }
+                            */
 
+                            //Cargamos los libros leídos en books
+                            try {
+                                GenericTypeIndicator<List<BookItem>> t = new GenericTypeIndicator<List<BookItem>>() {
+                                };
+                                 books = dataSnapshot.getValue(t);
+                            }catch (Exception e){
+                                System.err.println(e.getMessage());
+                                e.printStackTrace();
+                            }
                         }
 
                         @Override
