@@ -203,7 +203,15 @@ public class BookListActivity extends AppCompatActivity {
                 } else {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, BookDetailActivity.class);
+
+                    //Añadimos los argumentos que se envían a la nueva actividad
                     intent.putExtra(BookDetailFragment.ARG_ITEM_ID, Integer.toString(item.getIdentificador()));
+                    intent.putExtra(BookDetailFragment.ARG_ITEM_TITLE, item.getTitle());
+                    intent.putExtra(BookDetailFragment.ARG_ITEM_AUTHOR, item.getTitle());
+                    intent.putExtra(BookDetailFragment.ARG_ITEM_DESCRIPTION, item.getDescription());
+                    intent.putExtra(BookDetailFragment.ARG_ITEM_URL_IMAGE, item.getUrl_image());
+                    intent.putExtra(BookDetailFragment.ARG_ITEM_PUBLICATION_DATE, item.getPublication_date());
+
 
                     context.startActivity(intent);
                 }

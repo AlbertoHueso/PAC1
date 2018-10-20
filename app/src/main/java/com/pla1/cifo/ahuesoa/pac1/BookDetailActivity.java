@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
@@ -52,9 +53,20 @@ public class BookDetailActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
+            //Se añaden todos los argumentos que se quieren enviar al fragmento
             Bundle arguments = new Bundle();
             arguments.putString(BookDetailFragment.ARG_ITEM_ID,
                     getIntent().getStringExtra(BookDetailFragment.ARG_ITEM_ID));
+            arguments.putString(BookDetailFragment.ARG_ITEM_TITLE,
+                    getIntent().getStringExtra(BookDetailFragment.ARG_ITEM_TITLE));
+            arguments.putString(BookDetailFragment.ARG_ITEM_AUTHOR,
+                    getIntent().getStringExtra(BookDetailFragment.ARG_ITEM_AUTHOR));
+            arguments.putString(BookDetailFragment.ARG_ITEM_URL_IMAGE,
+                    getIntent().getStringExtra(BookDetailFragment.ARG_ITEM_URL_IMAGE));
+            arguments.putString(BookDetailFragment.ARG_ITEM_PUBLICATION_DATE,
+                    getIntent().getStringExtra(BookDetailFragment.ARG_ITEM_PUBLICATION_DATE));
+            arguments.putString(BookDetailFragment.ARG_ITEM_DESCRIPTION,
+                    getIntent().getStringExtra(BookDetailFragment.ARG_ITEM_DESCRIPTION));;
             BookDetailFragment fragment = new BookDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()

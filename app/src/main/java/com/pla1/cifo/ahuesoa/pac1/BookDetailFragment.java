@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,16 @@ public class BookDetailFragment extends Fragment {
      */
     public static final String ARG_ITEM_ID = "item_id";
 
+    public static final String ARG_ITEM_TITLE = "item_title";
+
+    public static final String ARG_ITEM_AUTHOR = "item_author";
+
+    public static final String ARG_ITEM_DESCRIPTION = "item_description";
+
+    public static final String ARG_ITEM_URL_IMAGE = "item_url_image";
+
+    public static final String ARG_ITEM_PUBLICATION_DATE = "item_publication_date";
+
     /**
      * The dummy content this fragment is presenting.
      */
@@ -49,6 +60,12 @@ public class BookDetailFragment extends Fragment {
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
             mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
+            Log.d("argumentos",getArguments().getString(ARG_ITEM_TITLE));
+
+            Log.d("argumentos",getArguments().getString(ARG_ITEM_DESCRIPTION));
+            Log.d("argumentos",getArguments().getString(ARG_ITEM_PUBLICATION_DATE));
+            Log.d("argumentos",getArguments().getString(ARG_ITEM_AUTHOR));
+            Log.d("argumentos",getArguments().getString(ARG_ITEM_URL_IMAGE));
 
 
         }
