@@ -1,18 +1,23 @@
 package model;
 
+import com.pla1.cifo.ahuesoa.pac1.dummy.Funciones;
+
+import java.text.ParseException;
 import java.util.Date;
+import java.text.SimpleDateFormat;
 
 
 /**
- * Clase para guardar los libros
+ * Clase para representar cada libro
  */
 public class BookItem {
+
     private int identificador;
-    private String titulo;
-    private String autor;
-    private Date publicacionFecha;
-    private String descripcion;
-    private String urlImagen;
+    private String title;
+    private String author;
+    private Date publication_date;
+    private String description;
+    private String url_image;
 
 
     /**
@@ -20,114 +25,140 @@ public class BookItem {
      * @param identificador Identificador del BookItem
      * @param titulo Titulo del BookItem
      * @param autor  Autor del BookItem
-     * @param publicacionFecha  Fecha de publicacion del BookItem
+     * @param publication_date  Fecha de publicacion del BookItem
      * @param descripcion  Descripcion del BookItem
      * @param urlImagen     URL de la imagen del BookItem
      */
-    public BookItem(int identificador,String titulo, String autor,Date publicacionFecha, String descripcion,String urlImagen){
+    public BookItem(int identificador,String titulo, String autor,Date publication_date, String descripcion,String urlImagen){
 
         this.identificador=identificador;
-        this.titulo=titulo;
-        this.autor=autor;
-        this.publicacionFecha=publicacionFecha;
-        this.descripcion=descripcion;
-        this.urlImagen=urlImagen;
+        this.title=titulo;
+        this.author=autor;
+        this.publication_date=publication_date;
+        this.description=descripcion;
+        this.url_image=urlImagen;
+
+    }
+
+    /**Constructor vacío, necesario para que se puedan crear objetos BookItem desde Firebase
+     *
+     */
+    public BookItem(){
 
     }
 
     /**
-     * Obtiene el identificador del BookItem
-     * @return identificador
+     * Obtiene el identificador
+     * @return int identificador
      */
     public int getIdentificador() {
         return identificador;
     }
 
     /**
-     * Obtiene el titulo del BookItem
-     * @return titulo
+     * Asigna el identificador
+     * @param identificador
      */
-    public String getTitulo(){
-        return titulo;
+    public void setIdentificador(int identificador) {
+        this.identificador = identificador;
     }
 
     /**
-     * Obtiene el autor del BookItem
-     * @return autor
+     * Obtiene el título
+     * @return String con el título
      */
-    public String getAutor(){
-        return autor;
+    public String getTitle() {
+        return title;
     }
 
     /**
-     * Obtiene la fecha de publicacion del BookItem
-     * @return publicacionFecha
+     * Asigna el título
+     * @param title
      */
-    public Date getPublicacionFecha(){
-        return publicacionFecha;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     /**
-     * Obtiene la descripción del BookItem
-     * @return descripcion
+     * Obtiene el autor
+     * @return
      */
-    public String getDescripcion(){
-        return descripcion;
+    public String getAuthor() {
+        return author;
     }
 
     /**
-     * Obtiene la dirección URL de la imagen
-     * @return urlImagen
+     *Asigna el autor
+     * @param author
      */
-    public String getUrlImagen(){
-        return urlImagen;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
     /**
-     * Actualiza el identificador
-     * @param identificador int Identificador
+     * Obtiene la fecha de publicacion
+     * @return String la fecha de publicación
      */
-    public void setIdentificador(int identificador){
-        this.identificador=identificador;
+    public String getPublication_date() {
+        String dateFormated= Funciones.getDateFormated(publication_date);
+        return dateFormated;
     }
 
     /**
-     * Actualiza el titulo
-     * @param titulo String titulo
+     * Asigna la fecha de publicacion a partir de un String
+     * @param publication_date
+     * @see #getDateFromString(String)
      */
-    public void setTitulo(String titulo){
-        this.titulo=titulo;
+    public void setPublication_date(String publication_date) {
+        this.publication_date = getDateFromString(publication_date);
     }
 
     /**
-     * Actualiza el autor
-     * @param autor String autor
+     * Obtiene la descripción del libro
+     * @return String con la descripcion
      */
-    public void setAutor(String autor){
-        this.autor=autor;
+    public String getDescription() {
+        return description;
     }
 
     /**
-     * Asigna la descripción
-     * @param descripcion String Descripcion
+     * Asigna la descripcion del libro
+     * @param description
      */
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     /**
-     * Asigna la fecha de publicacion
-     * @param publicacionFecha Date Fecha de la publicacion
+     * Obtiene la url de la imagen del libro
+     * @return String con url de la imagen
      */
-    public void setPublicacionFecha(Date publicacionFecha) {
-        this.publicacionFecha = publicacionFecha;
+    public String getUrl_image() {
+        return url_image;
     }
 
     /**
-     * Asigna la URL de la imagen
-     * @param urlImagen String URL De la imagen
+     * Asigna la url de la imagen del libro
+     * @param url_image
      */
-    public void setUrlImagen(String urlImagen) {
-        this.urlImagen = urlImagen;
+    public void setUrl_image(String url_image) {
+        this.url_image = url_image;
+    }
+
+    /**
+     * A partir de un string formato "dd/MM/yyyy" lo convierte en una fecha
+     * @param s
+     * @return
+     */
+    public Date getDateFromString(String s){
+        Date date=null;
+
+        try {
+           date = new SimpleDateFormat("dd/MM/yyyy").parse(s);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return date;
     }
 }

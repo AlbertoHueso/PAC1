@@ -13,7 +13,7 @@ import java.text.SimpleDateFormat;
  * Helper class for providing sample content for user interfaces created by
  * Android template wizards.
  * <p>
- * TODO: Replace all uses of this class before publishing your app.
+ *
  */
 public class DummyContent {
 
@@ -64,23 +64,13 @@ public class DummyContent {
             this.identificador=identificador;
             this.titulo=titulo;
             this.autor=autor;
-            this.publicacionFecha=getDate(); //Como solo es una muestra asignamos la fecha actual
+            this.publicacionFecha=new Funciones().getDateFormated(new Date()); //Como solo es una muestra asignamos la fecha actual
             this.descripcion=descripcion;
             this.urlImagen=urlImagen;
         }
 
 
 
-        /**
-         * Obtiene un String con la fecha y hora en el formato dd/MM/yyyy
-         * @return String con fecha y hora
-         */
-        public  static String getDate(){
-            DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            Date date=new Date();
-            String fecha=sdf.format(date);
-            return fecha;
 
-        }
     }
 }

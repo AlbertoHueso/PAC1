@@ -26,6 +26,8 @@ import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
 
 import java.util.List;
 
+import model.BookItem;
+
 /**
  * An activity representing a list of Items. This activity
  * has different presentations for handset and tablet-size devices. On
@@ -86,7 +88,16 @@ public class BookListActivity extends AppCompatActivity {
                                Log.d("autor", ds.child("author").toString());
                                Log.d("description", ds.child("description").toString());
                                Log.d("date", ds.child("publication_date").toString());
+                               Log.d("key",ds.getKey().toString());
+
+                               try {
+                                   BookItem book = ds.getValue(BookItem.class);
+                               }
+                               catch (EnumConstantNotPresentException e){
+                                   Log.e("granError",ds.getKey().toString());
+                               }
                            }
+
                         }
 
                         @Override
