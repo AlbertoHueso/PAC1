@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
 
-
+import model.BookItem;
 
 
 /**
@@ -31,7 +31,7 @@ public class BookDetailFragment extends Fragment {
     /**
      * The dummy content this fragment is presenting.
      */
-    private DummyContent.DummyBook mItem;
+    private BookItem mItem;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -69,13 +69,13 @@ public class BookDetailFragment extends Fragment {
 
         // Mostramos el contenido Dummy
         if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.author)).setText(mItem.autor);
-            ((TextView) rootView.findViewById(R.id.publish_date)).setText(mItem.publicacionFecha);
-            ((TextView) rootView.findViewById(R.id.description)).setText(mItem.descripcion);
+            ((TextView) rootView.findViewById(R.id.author)).setText(mItem.getAuthor());
+            ((TextView) rootView.findViewById(R.id.publish_date)).setText(mItem.getPublication_date());
+            ((TextView) rootView.findViewById(R.id.description)).setText(mItem.getDescription());
            ImageView imagen=rootView.findViewById(R.id.portada);        //Obtenemos elcontenedor de la imagen imagen
 
             //obtenemos la url de la imagen, en funcion del identificador de cada dummyitem
-            int img = getResources().getIdentifier("@drawable/juego_ender"+ mItem.identificador, "drawable",getContext().getPackageName());
+            int img = getResources().getIdentifier("@drawable/juego_ender"+ mItem.getIdentificador(), "drawable",getContext().getPackageName());
 
             //Asignamos al contenedor de la imagen la imagen del archivo directorio drawable
             imagen.setImageResource(img);
@@ -84,7 +84,7 @@ public class BookDetailFragment extends Fragment {
         Activity activity = this.getActivity();
         CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
         if (appBarLayout != null) {
-            appBarLayout.setTitle(mItem.titulo);
+            appBarLayout.setTitle(mItem.getTitle());
         }
         return rootView;
     }

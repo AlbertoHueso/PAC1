@@ -76,8 +76,12 @@ public class BookListActivity extends AppCompatActivity {
         String email="who1@car.es";
         String password="whoreallycares";
 
-        MyAuthoritation conexion=new MyAuthoritation(email,password,this);
-        conexion.connection();
+        MyAuthoritation co=new MyAuthoritation(email,password,this);
+
+        if (!co.connection()){
+            if (!co.connection())
+            loadItemList(DummyContent.ITEMS);
+        };
 
 
 
@@ -90,6 +94,9 @@ public class BookListActivity extends AppCompatActivity {
         // Leemos de la base de datos
                     //Abrimos escuchador de eventos
                     myRef.addValueEventListener(new ValueEventListener() {
+
+
+
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
@@ -117,7 +124,14 @@ public class BookListActivity extends AppCompatActivity {
                                 GenericTypeIndicator<List<BookItem>> t = new GenericTypeIndicator<List<BookItem>>() {
                                 };
                                  books = dataSnapshot.getValue(t);
+
+                                //Cargamos los libros en la vista
+                                loadItemList(books);
+
+
                             }catch (Exception e){
+                                //Cargamos la lista Dummy
+                                loadItemList(DummyContent.ITEMS);
                                 System.err.println(e.getMessage());
                                 e.printStackTrace();
                             }
@@ -125,8 +139,10 @@ public class BookListActivity extends AppCompatActivity {
 
                         @Override
                         public void onCancelled(DatabaseError error) {
-                            // Failed to read value
+                            // Error al leer el valor
                             Log.e("lecturaError", "Failed to read value.", error.toException());
+                            //Cargamos la lista Dummy
+                            loadItemList(DummyContent.ITEMS);
                         }
                     });
 
@@ -151,28 +167,29 @@ public class BookListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        View recyclerView = findViewById(R.id.item_list);
-        assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+
     }
 
-    private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS, mTwoPane));
+    private void setupRecyclerView(@NonNull RecyclerView recyclerView, List<BookItem> items){
+
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, items, mTwoPane));
     }
 
     public static class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         private final BookListActivity mParentActivity;
-        private final List<DummyContent.DummyBook> mValues;
+        private final List<BookItem> mValues;
+
         private final boolean mTwoPane;
+
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DummyContent.DummyBook item = (DummyContent.DummyBook) view.getTag();
+                BookItem item = (BookItem) view.getTag();
                 if (mTwoPane) {
                     Bundle arguments = new Bundle();
-                    arguments.putString(BookDetailFragment.ARG_ITEM_ID, item.identificador);
+                    arguments.putString(BookDetailFragment.ARG_ITEM_ID, Integer.toString(item.getIdentificador()));
                     BookDetailFragment fragment = new BookDetailFragment();
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -181,7 +198,7 @@ public class BookListActivity extends AppCompatActivity {
                 } else {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, BookDetailActivity.class);
-                    intent.putExtra(BookDetailFragment.ARG_ITEM_ID, item.identificador);
+                    intent.putExtra(BookDetailFragment.ARG_ITEM_ID, Integer.toString(item.getIdentificador()));
 
                     context.startActivity(intent);
                 }
@@ -189,12 +206,14 @@ public class BookListActivity extends AppCompatActivity {
         };
 
         SimpleItemRecyclerViewAdapter(BookListActivity parent,
-                                      List<DummyContent.DummyBook> items,
+                                      List<BookItem> items,
                                       boolean twoPane) {
             mValues = items;
             mParentActivity = parent;
             mTwoPane = twoPane;
         }
+
+
 
 
         /**
@@ -245,9 +264,9 @@ public class BookListActivity extends AppCompatActivity {
         public void onBindViewHolder(final ViewHolder holder, int position) {
 
             //Mostramos el título en el id
-            holder.mIdView.setText(mValues.get(position).titulo);
+            holder.mIdView.setText(mValues.get(position).getTitle());
             //Mostramos el autor en el content
-            holder.mContentView.setText(mValues.get(position).autor);
+            holder.mContentView.setText(mValues.get(position).getAuthor());
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
@@ -269,6 +288,10 @@ public class BookListActivity extends AppCompatActivity {
             }
         }
     }
-
+    private void loadItemList(List<BookItem> books){
+        View recyclerView = findViewById(R.id.item_list);
+        assert recyclerView != null;
+        setupRecyclerView((RecyclerView) recyclerView,books);
+    }
 
 }

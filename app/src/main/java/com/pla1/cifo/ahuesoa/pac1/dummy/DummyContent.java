@@ -7,7 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import static java.lang.Integer.valueOf;
-import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import model.BookItem;
 
 /**
  * Helper class for providing sample content for user interfaces created by
@@ -20,13 +22,12 @@ public class DummyContent {
     /**
      * An array of sample (dummy) items.
      */
-    public static final List<DummyBook> ITEMS = new ArrayList<DummyBook>();
+    public static final List<BookItem> ITEMS = new ArrayList<BookItem>();
 
     /**
      * A map of sample (dummy) items, by ID.
      */
-    public static final Map<String, DummyBook> ITEM_MAP = new HashMap<String, DummyBook>();
-
+    public static final Map<String, BookItem> ITEM_MAP = new HashMap<String, BookItem>();
 
 
     private static final int COUNT = 5;
@@ -34,43 +35,18 @@ public class DummyContent {
     static {
         // Add some sample items.
         for (int i = 1; i <= COUNT; i++) {
-            addItem(createDummyItem(i));
+            addItem(createDummyBookItem(i));
         }
     }
 
-    private static void addItem(DummyBook item) {
+    private static void addItem(BookItem item) {
         ITEMS.add(item);
-        ITEM_MAP.put(item.identificador, item);
+        ITEM_MAP.put(Integer.toString(item.getIdentificador()), item);
     }
 
-    private static DummyBook createDummyItem(int position) {
-        return new DummyBook(valueOf(position).toString(), "Title " + position, "author "+position, "Descripcion "+position,
-                "urlImagen "+position);
+    private static BookItem createDummyBookItem(int position) {
+        return new BookItem(position, "Title " + position, "author " + position, new Date(), "Descripcion " + position,
+                "urlImagen " + position);
     }
 
-
-    /**
-     *Clase que representa cada libro de la lista Dummy para rellenar por defecto
-     */
-    public static class DummyBook {
-        public String identificador;
-        public String titulo;
-        public String autor;
-        public String publicacionFecha;
-        public String descripcion;
-        public String urlImagen;
-
-        public DummyBook(String identificador, String titulo, String autor, String descripcion, String urlImagen) {
-            this.identificador=identificador;
-            this.titulo=titulo;
-            this.autor=autor;
-            this.publicacionFecha=new Funciones().getDateFormated(new Date()); //Como solo es una muestra asignamos la fecha actual
-            this.descripcion=descripcion;
-            this.urlImagen=urlImagen;
-        }
-
-
-
-
-    }
 }
