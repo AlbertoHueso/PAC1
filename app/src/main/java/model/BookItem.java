@@ -107,10 +107,10 @@ public class BookItem {
     /**
      * Asigna la fecha de publicacion a partir de un String
      * @param publication_date
-     * @see #getDateFromString(String)
+     * @see Funciones#getDateFromString(String)
      */
     public void setPublication_date(String publication_date) {
-        this.publication_date = getDateFromString(publication_date);
+        this.publication_date = Funciones.getDateFromString(publication_date);
     }
 
     /**
@@ -145,20 +145,5 @@ public class BookItem {
         this.url_image = url_image;
     }
 
-    /**
-     * A partir de un string formato "dd/MM/yyyy" lo convierte en una fecha
-     * @param s
-     * @return
-     */
-    public Date getDateFromString(String s){
-        Date date=null;
 
-        try {
-           date = new SimpleDateFormat("dd/MM/yyyy").parse(s);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return date;
-    }
 }

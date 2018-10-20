@@ -12,6 +12,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
+import com.pla1.cifo.ahuesoa.pac1.dummy.Funciones;
+
+import java.util.Date;
 
 import model.BookItem;
 
@@ -59,15 +62,17 @@ public class BookDetailFragment extends Fragment {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-            mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
-            Log.d("argumentos",getArguments().getString(ARG_ITEM_TITLE));
+            //mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
 
-            Log.d("argumentos",getArguments().getString(ARG_ITEM_DESCRIPTION));
-            Log.d("argumentos",getArguments().getString(ARG_ITEM_PUBLICATION_DATE));
-            Log.d("argumentos",getArguments().getString(ARG_ITEM_AUTHOR));
-            Log.d("argumentos",getArguments().getString(ARG_ITEM_URL_IMAGE));
-
-
+            int id=Integer.parseInt(getArguments().getString(ARG_ITEM_ID));
+            String title=getArguments().getString(ARG_ITEM_TITLE);
+            String description=getArguments().getString(ARG_ITEM_DESCRIPTION);
+            Date publication_date= Funciones.getDateFromString(getArguments().getString(ARG_ITEM_PUBLICATION_DATE));
+            String author= getArguments().getString(ARG_ITEM_AUTHOR);
+            String url_image=getArguments().getString(ARG_ITEM_URL_IMAGE);
+         ;
+            //Creamos el nuevo elemento
+            mItem=new BookItem(id,title,author,publication_date,description,url_image);
         }
     }
 

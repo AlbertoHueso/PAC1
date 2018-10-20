@@ -1,6 +1,7 @@
 package com.pla1.cifo.ahuesoa.pac1.dummy;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -16,5 +17,22 @@ public class Funciones {
         String fecha=sdf.format(date);
         return fecha;
 
+    }
+
+    /**
+     * A partir de un string formato "dd/MM/yyyy" lo convierte en una fecha
+     * @param s
+     * @return
+     */
+    public static Date getDateFromString(String s){
+        Date date=null;
+
+        try {
+            date = new SimpleDateFormat("dd/MM/yyyy").parse(s);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return date;
     }
 }
