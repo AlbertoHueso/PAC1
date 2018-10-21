@@ -39,11 +39,20 @@ public class DummyContent {
         }
     }
 
-    private static void addItem(BookItem item) {
-        ITEMS.add(item);
-        ITEM_MAP.put(Integer.toString(item.getIdentificador()), item);
+    /**
+     * Añadimos el libro al mapa
+     * @param book
+     */
+    private static void addItem(BookItem book) {
+        ITEMS.add(book);
+        ITEM_MAP.put(Integer.toString(book.getIdentificador()), book);
     }
 
+    /**
+     * Se crea un Dummy Book de muestra
+     * @param position el número que distinguirá cada libro, es la posición en la lista
+     * @return BookItem el libro muestra
+     */
     private static BookItem createDummyBookItem(int position) {
         return new BookItem(position, "Title " + position, "author " + position, new Date(), "Descripcion " + position,
                 "urlImagen " + position);

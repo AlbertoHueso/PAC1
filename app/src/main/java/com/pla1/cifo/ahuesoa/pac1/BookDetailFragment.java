@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
 import com.pla1.cifo.ahuesoa.pac1.dummy.Funciones;
+import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 
@@ -27,23 +28,32 @@ import model.BookItem;
  */
 public class BookDetailFragment extends Fragment {
     /**
-     * The fragment argument representing the item ID that this fragment
-     * represents.
+     * El argumento del fragmento representando el identificador del libro del fragmento
      */
     public static final String ARG_ITEM_ID = "item_id";
-
+    /**
+     * El argumento del fragmento representando el título del libro del fragmento
+     */
     public static final String ARG_ITEM_TITLE = "item_title";
-
+    /**
+     * El argumento del fragmento representando el autor del libro del fragmento
+     */
     public static final String ARG_ITEM_AUTHOR = "item_author";
-
+    /**
+     * El argumento del fragmento representando la descripción del libro del fragmento
+     */
     public static final String ARG_ITEM_DESCRIPTION = "item_description";
-
+    /**
+     * El argumento del fragmento representando la url de la imagen del libro del fragmento
+     */
     public static final String ARG_ITEM_URL_IMAGE = "item_url_image";
-
+    /**
+     * El argumento del fragmento representando la fecha de publicación del libro del fragmento
+     */
     public static final String ARG_ITEM_PUBLICATION_DATE = "item_publication_date";
 
     /**
-     * The dummy content this fragment is presenting.
+     * El libro que se va a representar
      */
     private BookItem mItem;
 
@@ -64,6 +74,7 @@ public class BookDetailFragment extends Fragment {
             // to load content from a content provider.
             //mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
 
+            //Obtenemos los argumentos pasados al fragmento desde otra actividad, los datos de cada libro
             int id=Integer.parseInt(getArguments().getString(ARG_ITEM_ID));
             String title=getArguments().getString(ARG_ITEM_TITLE);
             String description=getArguments().getString(ARG_ITEM_DESCRIPTION);
@@ -71,7 +82,7 @@ public class BookDetailFragment extends Fragment {
             String author= getArguments().getString(ARG_ITEM_AUTHOR);
             String url_image=getArguments().getString(ARG_ITEM_URL_IMAGE);
          ;
-            //Creamos el nuevo elemento
+            //Creamos el nuevo elemento BookItem
             mItem=new BookItem(id,title,author,publication_date,description,url_image);
         }
     }
@@ -91,16 +102,28 @@ public class BookDetailFragment extends Fragment {
 
         // Mostramos el contenido Dummy
         if (mItem != null) {
+            //Obtenemos cada elemento del layout que contendrá datos
             ((TextView) rootView.findViewById(R.id.author)).setText(mItem.getAuthor());
             ((TextView) rootView.findViewById(R.id.publish_date)).setText(mItem.getPublication_date());
             ((TextView) rootView.findViewById(R.id.description)).setText(mItem.getDescription());
-           ImageView imagen=rootView.findViewById(R.id.portada);        //Obtenemos elcontenedor de la imagen imagen
+            //Obtenemos elcontenedor de la imagen imagen
+           ImageView imagen=rootView.findViewById(R.id.portada);
 
+            Log.d("imagenUrl",mItem.getUrl_image());
+
+            /*
             //obtenemos la url de la imagen, en funcion del identificador de cada dummyitem
             int img = getResources().getIdentifier("@drawable/juego_ender"+ mItem.getIdentificador(), "drawable",getContext().getPackageName());
 
+
             //Asignamos al contenedor de la imagen la imagen del archivo directorio drawable
             imagen.setImageResource(img);
+
+            */
+
+            Picasso.with(this.getContext()).load(mItem.getUrl_image()).into(imagen);
+
+
             //imagen.setImageResource(R.drawable.juego_ender); Sería el método para añadir directamente una imagen, sin parametrizar
         }
         Activity activity = this.getActivity();

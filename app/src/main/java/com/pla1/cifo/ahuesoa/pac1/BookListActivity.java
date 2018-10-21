@@ -193,8 +193,17 @@ public class BookListActivity extends AppCompatActivity {
             public void onClick(View view) {
                 BookItem item = (BookItem) view.getTag();
                 if (mTwoPane) {
+
+
+
                     Bundle arguments = new Bundle();
                     arguments.putString(BookDetailFragment.ARG_ITEM_ID, Integer.toString(item.getIdentificador()));
+                    arguments.putString(BookDetailFragment.ARG_ITEM_TITLE, item.getTitle());
+                    arguments.putString(BookDetailFragment.ARG_ITEM_AUTHOR, item.getAuthor());
+                    arguments.putString(BookDetailFragment.ARG_ITEM_DESCRIPTION, item.getDescription());
+                    arguments.putString(BookDetailFragment.ARG_ITEM_URL_IMAGE, item.getUrl_image());
+                    arguments.putString(BookDetailFragment.ARG_ITEM_PUBLICATION_DATE, item.getPublication_date());
+
                     BookDetailFragment fragment = new BookDetailFragment();
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -207,12 +216,12 @@ public class BookListActivity extends AppCompatActivity {
                     //Añadimos los argumentos que se envían a la nueva actividad
                     intent.putExtra(BookDetailFragment.ARG_ITEM_ID, Integer.toString(item.getIdentificador()));
                     intent.putExtra(BookDetailFragment.ARG_ITEM_TITLE, item.getTitle());
-                    intent.putExtra(BookDetailFragment.ARG_ITEM_AUTHOR, item.getTitle());
+                    intent.putExtra(BookDetailFragment.ARG_ITEM_AUTHOR, item.getAuthor());
                     intent.putExtra(BookDetailFragment.ARG_ITEM_DESCRIPTION, item.getDescription());
                     intent.putExtra(BookDetailFragment.ARG_ITEM_URL_IMAGE, item.getUrl_image());
                     intent.putExtra(BookDetailFragment.ARG_ITEM_PUBLICATION_DATE, item.getPublication_date());
 
-
+                    //Se inicia la nueva actividad
                     context.startActivity(intent);
                 }
             }
