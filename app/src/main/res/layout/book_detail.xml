@@ -28,7 +28,8 @@
 
         <TextView
             android:id="@+id/author"
-            style="?android:attr/textAppearanceLarge"
+
+            android:textStyle="bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TextView" />
@@ -37,13 +38,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TextView"
-            style="?android:attr/textAppearanceLarge"/>
+            />
+
         <TextView
             android:id="@+id/description"
+            style="?android:attr/textAppearanceMedium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView"
-            style="?android:attr/textAppearanceLarge"/>
+            android:text="TextView" />
     </LinearLayout>
 
 

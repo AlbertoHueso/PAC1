@@ -57,7 +57,7 @@ public class MyAuthoritation {
                 if (task.isSuccessful())
                 {
                     conexion=true;//Actualizamos el valor de la conexion
-                    Log.d("LoginSuccess", "signInWithEmail:success :"+mAuth.getCurrentUser().getUid());
+                    Log.i("LoginSuccess", "signInWithEmail:success :"+mAuth.getCurrentUser().getUid());
 
                 }
 

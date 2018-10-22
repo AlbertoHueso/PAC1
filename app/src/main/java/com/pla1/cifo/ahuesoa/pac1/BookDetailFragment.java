@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,22 +108,25 @@ public class BookDetailFragment extends Fragment {
             //Obtenemos elcontenedor de la imagen imagen
            ImageView imagen=rootView.findViewById(R.id.portada);
 
-            Log.d("imagenUrl",mItem.getUrl_image());
-
-            /*
-            //obtenemos la url de la imagen, en funcion del identificador de cada dummyitem
-            int img = getResources().getIdentifier("@drawable/juego_ender"+ mItem.getIdentificador(), "drawable",getContext().getPackageName());
-
-
-            //Asignamos al contenedor de la imagen la imagen del archivo directorio drawable
-            imagen.setImageResource(img);
-
-            */
-
+            //Asignamos la url de la imagenal contenedor de la imagen utilizando la librería Picasso
             Picasso.with(this.getContext()).load(mItem.getUrl_image()).into(imagen);
 
+            /*
+            *ANTIGUO CÓDIGO, SE CONSERVA POR RAZONES DE APRENDIZAJE
+                    *
+                    //obtenemos la url de la imagen, en funcion del identificador de cada dummyitem
+                    int img = getResources().getIdentifier("@drawable/juego_ender"+ mItem.getIdentificador(), "drawable",getContext().getPackageName());
 
-            //imagen.setImageResource(R.drawable.juego_ender); Sería el método para añadir directamente una imagen, sin parametrizar
+
+                    //Asignamos al contenedor de la imagen la imagen del archivo directorio drawable
+                    imagen.setImageResource(img);
+
+                    //imagen.setImageResource(R.drawable.juego_ender); Sería el método para añadir directamente una imagen, sin parametrizar
+            */
+
+
+
+
         }
         Activity activity = this.getActivity();
         CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);

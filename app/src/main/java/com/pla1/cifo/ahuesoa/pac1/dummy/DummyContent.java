@@ -1,14 +1,11 @@
 package com.pla1.cifo.ahuesoa.pac1.dummy;
 
-import java.text.DateFormat;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import static java.lang.Integer.valueOf;
-import java.util.Date;
-
 import model.BookItem;
 
 /**
@@ -30,6 +27,9 @@ public class DummyContent {
     public static final Map<String, BookItem> ITEM_MAP = new HashMap<String, BookItem>();
 
 
+    /**
+     * Número de elementos de muestra
+     */
     private static final int COUNT = 5;
 
     static {
@@ -40,7 +40,7 @@ public class DummyContent {
     }
 
     /**
-     * Añadimos el libro al mapa
+     * Añadimos el libro book al mapa
      * @param book
      */
     private static void addItem(BookItem book) {

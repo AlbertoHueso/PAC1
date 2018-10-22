@@ -5,6 +5,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * Clase para guardar algunas funciones que se utilizarán en diferentes clases
+ *
+ */
 public class Funciones {
 
     /**

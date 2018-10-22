@@ -72,7 +72,7 @@ public class BookListActivity extends AppCompatActivity {
 
 
 
-        //Tratamos de autorizar
+        //Tratamos de autorizar con un email y passwords
 
         String email="who1@car.es";
         String password="whoreallycares";
@@ -89,6 +89,8 @@ public class BookListActivity extends AppCompatActivity {
 
 
 
+
+
         //Conexión a la base de datos y creación de la referencia
         FirebaseDatabase database=FirebaseDatabase.getInstance();
         DatabaseReference myRef=database.getReference("books");
@@ -98,30 +100,33 @@ public class BookListActivity extends AppCompatActivity {
                     myRef.addValueEventListener(new ValueEventListener() {
 
 
-
+                        //Caso conexión a la base de datos exitosa
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            /*
-                            //Bucle que recorre la base de datos, muestra los datos de cada libro y  guarda cada unoen objetos BookItem
-                           for(DataSnapshot ds: dataSnapshot.getChildren()){
-                               Log.d("titulo", ds.child("title").toString());
-                               Log.d("autor", ds.child("author").toString());
-                               Log.d("description", ds.child("description").toString());
-                               Log.d("date", ds.child("publication_date").toString());
-                               Log.d("key",ds.getKey().toString());
+                                            /*
+                                            *SE CONSERVA ESTE FRAGMENTO CON PROPÓSITOS DE APRENDIZAJE***
+                                            *
+                                            //Bucle que recorre la base de datos, muestra los datos de cada libro y  guarda cada unoen objetos BookItem
+                                           for(DataSnapshot ds: dataSnapshot.getChildren()){
+                                               Log.d("titulo", ds.child("title").toString());
+                                               Log.d("autor", ds.child("author").toString());
+                                               Log.d("description", ds.child("description").toString());
+                                               Log.d("date", ds.child("publication_date").toString());
+                                               Log.d("key",ds.getKey().toString());
 
-                               try {
-                                   //Obtenemos un libro
-                                   BookItem book = ds.getValue(BookItem.class);
-                               }
-                               catch (EnumConstantNotPresentException e){
-                                   System.err.println(e.getMessage());
-                               }
-                           }
-                            */
+                                               try {
+                                                   //Obtenemos un libro
+                                                   BookItem book = ds.getValue(BookItem.class);
+                                               }
+                                               catch (EnumConstantNotPresentException e){
+                                                   System.err.println(e.getMessage());
+                                               }
+                                           }
+                                            */
 
-                            //Cargamos los libros leídos en books
+
+                            //Cargamos los libros leídos de la base de datos en books
                             try {
                                 GenericTypeIndicator<List<BookItem>> t = new GenericTypeIndicator<List<BookItem>>() {
                                 };
@@ -142,6 +147,8 @@ public class BookListActivity extends AppCompatActivity {
                             }
                         }
 
+
+                        //Conexión a la base de datos fallida
                         @Override
                         public void onCancelled(DatabaseError error) {
                             // Error al leer el valor
@@ -150,6 +157,8 @@ public class BookListActivity extends AppCompatActivity {
                             loadItemList(DummyContent.ITEMS);
                         }
                     });
+
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -195,7 +204,7 @@ public class BookListActivity extends AppCompatActivity {
                 if (mTwoPane) {
 
 
-
+                    //Añadimos los argumentos que se envían al nuevo panel
                     Bundle arguments = new Bundle();
                     arguments.putString(BookDetailFragment.ARG_ITEM_ID, Integer.toString(item.getIdentificador()));
                     arguments.putString(BookDetailFragment.ARG_ITEM_TITLE, item.getTitle());
