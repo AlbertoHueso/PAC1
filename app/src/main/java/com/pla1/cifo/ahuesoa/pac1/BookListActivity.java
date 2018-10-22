@@ -24,10 +24,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
+import com.pla1.cifo.ahuesoa.pac1.dummy.Funciones;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import model.BookContent;
 import model.BookItem;
 
 /**
@@ -57,7 +60,7 @@ public class BookListActivity extends AppCompatActivity {
     /**
      * Variable que guarda los libros cargados en memoria para mostrar
      */
-    List<BookItem> books=null;
+    BookContent books=null;
 
 
     @Override
@@ -129,9 +132,15 @@ public class BookListActivity extends AppCompatActivity {
 
                             //Cargamos los libros leídos de la base de datos en books
                             try {
-                                GenericTypeIndicator<List<BookItem>> t = new GenericTypeIndicator<List<BookItem>>() {
+
+                                GenericTypeIndicator<BookContent<BookItem>> t = new GenericTypeIndicator<BookContent<BookItem>>() {
                                 };
-                                 books = dataSnapshot.getValue(t);
+                                Log.d("books","aqui1");
+
+                               ArrayList<BookItem>  booksArray = dataSnapshot.getValue(t);
+
+                               books=Funciones.toBookContent(booksArray);
+
 
                                 //Cargamos los libros en la vista
                                 loadItemList(books);

@@ -3,7 +3,12 @@ package com.pla1.cifo.ahuesoa.pac1.dummy;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+
+import model.BookContent;
+import model.BookItem;
 
 /**
  * Clase para guardar algunas funciones que se utilizarán en diferentes clases
@@ -38,5 +43,19 @@ public class Funciones {
         }
 
         return date;
+    }
+
+    /**
+     * Método para convertir un ArrayList de BookItem en un BookContent
+     * @param booksArrayList
+     * @return
+     */
+    public static BookContent toBookContent(ArrayList<BookItem> booksArrayList){
+        BookContent books=new BookContent();
+        Iterator it=booksArrayList.iterator();
+        while (it.hasNext()){
+           books.add( it.next());
+        }
+        return books;
     }
 }
