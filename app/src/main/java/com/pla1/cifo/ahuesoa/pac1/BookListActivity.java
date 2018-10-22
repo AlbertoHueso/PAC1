@@ -49,15 +49,17 @@ public class BookListActivity extends AppCompatActivity {
     /**
      * Variable FirebaseAuth para hacer la autenticacion
      */
-    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();  //Creamos una instancia FirebaseAuth para hacer la autentificación
-    /**
+    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    /*
      * Guarda si se ha producido la conexión o no
      */
-    private boolean conexion=false; //Variable para guardar si la conexión se ha realizado o no.
+    private boolean conexion=false;
     /**
      * Variable que guarda los libros cargados en memoria para mostrar
      */
     List<BookItem> books=null;
+
+
     @Override
     public void onStart() {
         super.onStart();
@@ -76,7 +78,6 @@ public class BookListActivity extends AppCompatActivity {
 
         String email="who1@car.es";
         String password="whoreallycares";
-
         MyAuthoritation co=new MyAuthoritation(email,password,this);
 
         //Se hacen dos intentos para evitar un problema si se ha desconectado el usuario previamente

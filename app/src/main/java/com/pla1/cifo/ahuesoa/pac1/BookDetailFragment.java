@@ -111,6 +111,8 @@ public class BookDetailFragment extends Fragment {
             //Asignamos la url de la imagenal contenedor de la imagen utilizando la librería Picasso
             Picasso.with(this.getContext()).load(mItem.getUrl_image()).into(imagen);
 
+
+
             /*
             *ANTIGUO CÓDIGO, SE CONSERVA POR RAZONES DE APRENDIZAJE
                     *
