@@ -42,10 +42,12 @@ public class MyAuthoritation {
 
     /**
      * Método para realizar la autorización en Firebase con el email y la clave indicadas en la construcción
-     * @return boolean con el resultado de la conexión
-     */
-    public boolean connection(){
 
+     */
+    public void connection(){
+
+        //Desconectamos para que no se mantenga una conexión exitosa previa con un usuario o clave actuales erróneos
+        mAuth.signOut();
 
 
         //Registro con correo y clave
@@ -65,12 +67,20 @@ public class MyAuthoritation {
                 {
                     Log.e("failureLogin", "signInWithEmail:failure", task.getException());
                     Log.e("noSuccessfullogin","no success");
-                    mAuth.signOut();//Desconectamos el usuario
+                    //mAuth.signOut();//Desconectamos el usuario
+
                 }
 
 
             }
         });
-    return conexion;
+
+
     }
+
+    public boolean isConexion() {
+        return conexion;
+    }
+
+
 }

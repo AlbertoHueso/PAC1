@@ -1,16 +1,15 @@
 package model;
 
+import com.orm.SugarRecord;
 import com.pla1.cifo.ahuesoa.pac1.dummy.Funciones;
-
-import java.text.ParseException;
 import java.util.Date;
-import java.text.SimpleDateFormat;
+
 
 
 /**
  * Clase para representar cada libro
  */
-public class BookItem {
+public class BookItem extends SugarRecord {
 
     private int identificador;
     private String title;

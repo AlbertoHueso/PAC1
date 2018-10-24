@@ -83,11 +83,10 @@ public class BookListActivity extends AppCompatActivity {
         String password="whoreallycares";
         MyAuthoritation co=new MyAuthoritation(email,password,this);
 
-        //Se hacen dos intentos para evitar un problema si se ha desconectado el usuario previamente
-        if (!co.connection()){
-            if (!co.connection())
-            loadItemList(DummyContent.ITEMS);
-        };
+
+        //Se hacen dos intentos porque si no no conectaría al volver a abrir la APP
+        co.connection();
+        co.connection();
 
 
 
@@ -95,18 +94,20 @@ public class BookListActivity extends AppCompatActivity {
 
 
 
-        //Conexión a la base de datos y creación de la referencia
+        //Conexión a la base de datos y creación de la referencia. books es el nodo de los libros en la base de datos, de ahí el path
         FirebaseDatabase database=FirebaseDatabase.getInstance();
         DatabaseReference myRef=database.getReference("books");
 
         // Leemos de la base de datos
                     //Abrimos escuchador de eventos
-                    myRef.addValueEventListener(new ValueEventListener() {
 
 
-                        //Caso conexión a la base de datos exitosa
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
+                        myRef.addValueEventListener(new ValueEventListener() {
+
+
+                            //Caso conexión a la base de datos exitosa
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
 
                                             /*
                                             *SE CONSERVA ESTE FRAGMENTO CON PROPÓSITOS DE APRENDIZAJE***
@@ -130,43 +131,51 @@ public class BookListActivity extends AppCompatActivity {
                                             */
 
 
-                            //Cargamos los libros leídos de la base de datos en books
-                            try {
+                                //Cargamos los libros leídos de la base de datos de Firebase en books
+                                try {
 
-                                GenericTypeIndicator<BookContent<BookItem>> t = new GenericTypeIndicator<BookContent<BookItem>>() {
-                                };
-                                Log.d("books","aqui1");
+                                    GenericTypeIndicator<BookContent<BookItem>> t = new GenericTypeIndicator<BookContent<BookItem>>() {
+                                    };
 
-                               ArrayList<BookItem>  booksArray = dataSnapshot.getValue(t);
-
-                               books=Funciones.toBookContent(booksArray);
-
-
-                                //Cargamos los libros en la vista
-                                loadItemList(books);
-
-                                //Actualizamos sus identificadores
-                                updateIdentificators(books);
+                                    //Cargamos los libros del snapshot en un ArrayList
+                                    //No podemos hacerlo en un BookContent directamente porque el casting no funciona
+                                    ArrayList<BookItem> booksArray = dataSnapshot.getValue(t);
 
 
-                            }catch (Exception e){
+
+                                    //Guardamos el booksArray en el BookContent
+                                    books = Funciones.toBookContent(booksArray);
+
+
+                                    //Cargamos los libros en la vista
+                                    loadItemList(books);
+
+                                    //Actualizamos sus identificadores
+                                    updateIdentificators(books);
+
+                                    //Actualizamos la conexión
+                                    conexion=true;
+
+                                } catch (Exception e) {
+                                    //Cargamos la lista Dummy
+                                    loadItemList(DummyContent.ITEMS);
+                                    Log.d("dummy","dummy2");
+                                    System.err.println(e.getMessage());
+                                    e.printStackTrace();
+                                }
+                            }
+
+
+                            //Conexión a la base de datos fallida
+                            @Override
+                            public void onCancelled(DatabaseError error) {
+                                // Error al leer el valor
+                                Log.e("lecturaError", "Failed to read value.", error.toException());
                                 //Cargamos la lista Dummy
                                 loadItemList(DummyContent.ITEMS);
-                                System.err.println(e.getMessage());
-                                e.printStackTrace();
+                                Log.d("dummy","dummy3");
                             }
-                        }
-
-
-                        //Conexión a la base de datos fallida
-                        @Override
-                        public void onCancelled(DatabaseError error) {
-                            // Error al leer el valor
-                            Log.e("lecturaError", "Failed to read value.", error.toException());
-                            //Cargamos la lista Dummy
-                            loadItemList(DummyContent.ITEMS);
-                        }
-                    });
+                        });
 
 
 
@@ -210,12 +219,17 @@ public class BookListActivity extends AppCompatActivity {
         private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BookItem item = (BookItem) view.getTag();
+
+
+
+                BookItem  item= (BookItem) view.getTag();
+
                 if (mTwoPane) {
 
 
                     //Añadimos los argumentos que se envían al nuevo panel
                     Bundle arguments = new Bundle();
+                    //Pasamos la POSICION como item_ID
                     arguments.putString(BookDetailFragment.ARG_ITEM_ID, Integer.toString(item.getIdentificador()));
                     arguments.putString(BookDetailFragment.ARG_ITEM_TITLE, item.getTitle());
                     arguments.putString(BookDetailFragment.ARG_ITEM_AUTHOR, item.getAuthor());
@@ -285,6 +299,7 @@ public class BookListActivity extends AppCompatActivity {
 
             ViewHolder holder = new ViewHolder(view);
 
+
             return holder;
         }
 
@@ -308,6 +323,7 @@ public class BookListActivity extends AppCompatActivity {
             holder.mIdView.setText(mValues.get(position).getTitle());
             //Mostramos el autor en el content
             holder.mContentView.setText(mValues.get(position).getAuthor());
+
 
             holder.itemView.setTag(mValues.get(position));
             holder.itemView.setOnClickListener(mOnClickListener);
@@ -342,12 +358,12 @@ public class BookListActivity extends AppCompatActivity {
 
 
     /**
-     * Método que a cada libro de una lista le asigna como identificador su posición+1
+     * Método que a cada libro de una lista le asigna como identificador su posición en la lista
      * @param books
      */
     private void updateIdentificators(List<BookItem> books){
 
-        int identificador=1;
+        int identificador=0;
         Iterator<BookItem> it=books.iterator();
         while (it.hasNext()){
             it.next().setIdentificador(identificador);
@@ -355,4 +371,6 @@ public class BookListActivity extends AppCompatActivity {
         }
 
     }
+
+
 }

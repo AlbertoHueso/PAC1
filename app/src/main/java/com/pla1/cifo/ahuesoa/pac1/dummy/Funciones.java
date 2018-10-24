@@ -48,7 +48,7 @@ public class Funciones {
     /**
      * Método para convertir un ArrayList de BookItem en un BookContent
      * @param booksArrayList
-     * @return
+     * @return BookContent con los libros BookItem del ArrayList
      */
     public static BookContent toBookContent(ArrayList<BookItem> booksArrayList){
         BookContent books=new BookContent();
