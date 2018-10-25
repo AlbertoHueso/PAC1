@@ -16,14 +16,7 @@ public class BookContent<BookItem> extends ArrayList {
         super();
     }
 
-    /**
-     * Retorna una lista con los diferentes libros
-     * @return
-     */
-    public  List<BookItem> getBooks(){
-        List<BookItem> list=(List<BookItem>)  this;
-        return list;
-    }
+
 
     /**
      * Retorna si el libro bookItem está en BookContent
@@ -34,4 +27,12 @@ public class BookContent<BookItem> extends ArrayList {
         return this.contains(bookItem);
     }
 
+
+    /**
+     * Método que retorna una lista con todos los BookItem en la base de datos
+     * @return ArrayList<model.BookItem>
+     */
+    public static ArrayList<model.BookItem> getBooks(){
+        return (ArrayList<model.BookItem>)model.BookItem.listAll(model.BookItem.class);
+    }
 }

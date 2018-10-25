@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.orm.SugarDb;
 import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
 import com.pla1.cifo.ahuesoa.pac1.dummy.Funciones;
 
@@ -67,7 +68,8 @@ public class BookListActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
 
-
+      long a=BookItem.count(BookItem.class);
+      Log.d("contar",Long.toString(a));
     }
 
     @Override
@@ -75,7 +77,8 @@ public class BookListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
 
-
+        SugarDb db = new SugarDb(this);
+        db.onCreate(db.getDB());
 
         //Tratamos de autorizar con un email y passwords
 
@@ -365,8 +368,15 @@ public class BookListActivity extends AppCompatActivity {
         int identificador=0;
         Iterator<BookItem> it=books.iterator();
         while (it.hasNext()){
-            it.next().setIdentificador(identificador);
+            BookItem book= it.next();
+            book.setIdentificador(identificador);
+            book.setId((long)identificador);
             identificador++;
+
+            if (BookItem.count(BookItem.class)==-1){
+                BookItem.save(book);
+
+            }
         }
 
     }
