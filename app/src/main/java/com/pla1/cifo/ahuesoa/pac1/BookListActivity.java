@@ -73,9 +73,6 @@ public class BookListActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
 
-
-      bookLocals=Funciones.toBookContent(BookItem.listAll(BookItem.class));
-      Log.d("contar",Integer.toString(bookLocals.size()));
     }
 
     @Override
@@ -83,13 +80,16 @@ public class BookListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
 
+        bookLocals=Funciones.toBookContent(BookItem.listAll(BookItem.class));
+        Log.d("contar",Integer.toString(bookLocals.size()));
+
         ConnectivityManager cm =
                 (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
-
+        Log.d("contar2",Integer.toString(bookLocals.size()));
         if(isConnected) {
             //Tratamos de autorizar con un email y passwords
 
@@ -158,6 +158,9 @@ public class BookListActivity extends AppCompatActivity {
                         //Cargamos los libros en la vista
                         loadItemList(books);
 
+                        Toast toast = Toast.makeText(getApplicationContext(), "CONNECTED TO EXTERNAL DATABASE\nREADING FROM FIREBASE DATABASE", Toast.LENGTH_LONG);
+                        toast.show();
+
                         //Actualizamos sus identificadores
                         updateIdentificatorsAndSaveNewItemsLocally(books);
 
@@ -165,8 +168,8 @@ public class BookListActivity extends AppCompatActivity {
                         conexion = true;
 
                     } catch (Exception e) {
-                        //Cargamos la lista Dummy
-                        loadItemList(DummyContent.ITEMS);
+                        //Cargamos datosLocales
+                        showLocalData();
                         Log.d("dummy", "dummy2");
                         System.err.println(e.getMessage());
                         e.printStackTrace();
@@ -179,8 +182,8 @@ public class BookListActivity extends AppCompatActivity {
                 public void onCancelled(DatabaseError error) {
                     // Error al leer el valor
                     Log.e("lecturaError", "Failed to read value.", error.toException());
-                    //Cargamos la lista Dummy
-                    loadItemList(DummyContent.ITEMS);
+                    //Cargamos datosLocales
+                    showLocalData();
                     Log.d("loginDummy", "dummy3");
                 }
             });
@@ -188,7 +191,7 @@ public class BookListActivity extends AppCompatActivity {
 
         }
         else {
-
+            showLocalData();
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -356,7 +359,6 @@ public class BookListActivity extends AppCompatActivity {
             }
         }
     }
-
     /**
      * Método que carga una lista de libros en la vista de la página
      * @param books
@@ -400,11 +402,21 @@ public class BookListActivity extends AppCompatActivity {
 
     }
 
-    private void showDataLocal(){
-        if (bookLocals.size()==0 || bookLocals==null){
+    private void showLocalData(){
+        if (bookLocals==null){
             loadItemList(DummyContent.ITEMS);
-            Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION TO EXTERNAL DATABASE/nNO DATA LOCALE", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION1 TO EXTERNAL DATABASE\nNO LOCAL DATA\nPLEASE TRY AGAIN", Toast.LENGTH_LONG);
             toast.show();
+        }else {
+          if(bookLocals.size()>0) {
+              Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION2 TO EXTERNAL DATABASE\nREADING LOCAL DATA", Toast.LENGTH_LONG);
+              toast.show();
+              loadItemList(bookLocals);
+          }else {
+              loadItemList(DummyContent.ITEMS);
+              Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION3 TO EXTERNAL DATABASE\nNO LOCAL DATA\nPLEASE TRY AGAIN", Toast.LENGTH_LONG);
+              toast.show();
+          }
         }
     }
 }
