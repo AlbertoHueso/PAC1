@@ -27,7 +27,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
-import com.pla1.cifo.ahuesoa.pac1.dummy.Funciones;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -89,7 +88,8 @@ public class BookListActivity extends AppCompatActivity {
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
-        Log.d("contar2",Integer.toString(bookLocals.size()));
+
+
         if(isConnected) {
             //Tratamos de autorizar con un email y passwords
 
@@ -110,34 +110,13 @@ public class BookListActivity extends AppCompatActivity {
             // Leemos de la base de datos
             //Abrimos escuchador de eventos
 
-            Log.d("logindDespierto", "despierto");
+
             myRef.addValueEventListener(new ValueEventListener() {
 
 
                 //Caso conexión a la base de datos exitosa
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-
-                                            /*
-                                            *SE CONSERVA ESTE FRAGMENTO CON PROPÓSITOS DE APRENDIZAJE***
-                                            *
-                                            //Bucle que recorre la base de datos, muestra los datos de cada libro y  guarda cada unoen objetos BookItem
-                                           for(DataSnapshot ds: dataSnapshot.getChildren()){
-                                               Log.d("titulo", ds.child("title").toString());
-                                               Log.d("autor", ds.child("author").toString());
-                                               Log.d("description", ds.child("description").toString());
-                                               Log.d("date", ds.child("publication_date").toString());
-                                               Log.d("key",ds.getKey().toString());
-
-                                               try {
-                                                   //Obtenemos un libro
-                                                   BookItem book = ds.getValue(BookItem.class);
-                                               }
-                                               catch (EnumConstantNotPresentException e){
-                                                   System.err.println(e.getMessage());
-                                               }
-                                           }
-                                            */
 
 
                     //Cargamos los libros leídos de la base de datos de Firebase en books
@@ -170,7 +149,6 @@ public class BookListActivity extends AppCompatActivity {
                     } catch (Exception e) {
                         //Cargamos datosLocales
                         showLocalData();
-                        Log.d("dummy", "dummy2");
                         System.err.println(e.getMessage());
                         e.printStackTrace();
                     }
@@ -184,15 +162,19 @@ public class BookListActivity extends AppCompatActivity {
                     Log.e("lecturaError", "Failed to read value.", error.toException());
                     //Cargamos datosLocales
                     showLocalData();
-                    Log.d("loginDummy", "dummy3");
+
                 }
             });
 
 
         }
+        //No conectado, se muestran datos locales
         else {
             showLocalData();
         }
+
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
@@ -372,49 +354,55 @@ public class BookListActivity extends AppCompatActivity {
 
     /**
      * Método que a cada libro de una lista le asigna como identificador su posición en la lista
+     * Además, si el libro no está en bookLocals lo añade a este y a la base de datos local
+     * Se hace aquí para no tener que recorrer de nuevo el array, aunque se sacrifica la encapsulación
      * @param books
      */
     private void updateIdentificatorsAndSaveNewItemsLocally(List<BookItem> books){
 
         int identificador=0;
         Iterator<BookItem> it=books.iterator();
+
+        //Recorremos la lista de books
         while (it.hasNext()){
             BookItem book= it.next();
+            //Se actualizan los identificadores
             book.setIdentificador(identificador);
             book.setId((long)identificador);
             identificador++;
 
-            if (bookLocals.size()==0){
-                BookItem.save(book);
-                bookLocals.add(book);
-                Log.d("añadido",book.getAuthor());
-            }
 
+            //Si el libro no está en bookLocals se añade
             if (!bookLocals.exists(book)){
-                Log.d("añadido2",book.getAuthor());
+
                 BookItem.save(book);
                 bookLocals.add(book);
 
-            }else {
-                Log.d("Noañadido3",book.getAuthor());
             }
         }
 
     }
 
+    /**
+     * Método que muestra los datos locales.Si no hay datos locales muestra el contenido Dummy
+     */
     private void showLocalData(){
+        //No hay datos locales, bookLocals es nulo
         if (bookLocals==null){
             loadItemList(DummyContent.ITEMS);
-            Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION1 TO EXTERNAL DATABASE\nNO LOCAL DATA\nPLEASE TRY AGAIN", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION TO EXTERNAL DATABASE\nNO LOCAL DATA\nPLEASE TRY AGAIN", Toast.LENGTH_LONG);
             toast.show();
         }else {
+          //Hay datos locales y hay libros cargados en bookLocals, se muetran
           if(bookLocals.size()>0) {
-              Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION2 TO EXTERNAL DATABASE\nREADING LOCAL DATA", Toast.LENGTH_LONG);
+              Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION TO EXTERNAL DATABASE\nREADING LOCAL DATA", Toast.LENGTH_LONG);
               toast.show();
               loadItemList(bookLocals);
+
+           //No hay libros cargados en bookLocals, se muestra el contenido Dummy
           }else {
               loadItemList(DummyContent.ITEMS);
-              Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION3 TO EXTERNAL DATABASE\nNO LOCAL DATA\nPLEASE TRY AGAIN", Toast.LENGTH_LONG);
+              Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION TO EXTERNAL DATABASE\nNO LOCAL DATA\nPLEASE TRY AGAIN", Toast.LENGTH_LONG);
               toast.show();
           }
         }

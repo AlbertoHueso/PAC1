@@ -1,7 +1,7 @@
 package model;
 
 import com.orm.SugarRecord;
-import com.pla1.cifo.ahuesoa.pac1.dummy.Funciones;
+import com.pla1.cifo.ahuesoa.pac1.Funciones;
 import java.util.Date;
 
 

@@ -1,9 +1,8 @@
-package com.pla1.cifo.ahuesoa.pac1.dummy;
+package com.pla1.cifo.ahuesoa.pac1;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;

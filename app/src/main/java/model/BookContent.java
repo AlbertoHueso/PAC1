@@ -22,6 +22,8 @@ public class BookContent<BookItem> extends ArrayList {
 
     /**
      * Retorna si el libro bookItem está en BookContent
+     * Si no existe un elemento de BookContent en el índice igual al identificador del libro devuelve false
+     * Si existe y sus identificadores son iguales devuelve true
      * @param bookItem
      * @return Boolean que dice si está o no
      */
@@ -31,6 +33,7 @@ public class BookContent<BookItem> extends ArrayList {
         try{
            myBook=(model.BookItem) this.get(index);
 
+           //Coinciden los identificadores, devuelve true, en el resto de casos false
            if (myBook.getIdentificador()==bookItem.getIdentificador()){
                return true;
            }else{
