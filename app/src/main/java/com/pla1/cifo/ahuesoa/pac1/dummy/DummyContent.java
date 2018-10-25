@@ -54,7 +54,7 @@ public class DummyContent {
      * @return BookItem el libro muestra
      */
     private static BookItem createDummyBookItem(int position) {
-        return new BookItem(position, "Title " + position, "author " + position, new Date(), "Descripcion " + position,
+        return new BookItem("Title " + position, "author " + position, new Date(), "Descripcion " + position,
                 "urlImagen " + position);
     }
 

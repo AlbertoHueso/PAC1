@@ -26,7 +26,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
-import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
+
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -367,9 +367,9 @@ public class BookListActivity extends AppCompatActivity {
         while (it.hasNext()){
             BookItem book= it.next();
             //Se actualizan los identificadores
-            book.setIdentificador(identificador);
-            book.setId((long)identificador);
-            identificador++;
+            book.setIdentificador(book.getIdHash());
+            book.setId((long)book.getIdentificador());
+
 
 
             //Si el libro no está en bookLocals se añade
@@ -389,7 +389,7 @@ public class BookListActivity extends AppCompatActivity {
     private void showLocalData(){
         //No hay datos locales, bookLocals es nulo
         if (bookLocals==null){
-            loadItemList(DummyContent.ITEMS);
+
             Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION TO EXTERNAL DATABASE\nNO LOCAL DATA\nPLEASE TRY AGAIN", Toast.LENGTH_LONG);
             toast.show();
         }else {
@@ -401,7 +401,7 @@ public class BookListActivity extends AppCompatActivity {
 
            //No hay libros cargados en bookLocals, se muestra el contenido Dummy
           }else {
-              loadItemList(DummyContent.ITEMS);
+
               Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION TO EXTERNAL DATABASE\nNO LOCAL DATA\nPLEASE TRY AGAIN", Toast.LENGTH_LONG);
               toast.show();
           }

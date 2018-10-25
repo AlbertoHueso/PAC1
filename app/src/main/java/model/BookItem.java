@@ -21,16 +21,15 @@ public class BookItem extends SugarRecord {
 
     /**
      * Constructor de BookItem
-     * @param identificador Identificador del BookItem
      * @param titulo Titulo del BookItem
      * @param autor  Autor del BookItem
      * @param publication_date  Fecha de publicacion del BookItem
      * @param descripcion  Descripcion del BookItem
      * @param urlImagen     URL de la imagen del BookItem
      */
-    public BookItem(int identificador,String titulo, String autor,Date publication_date, String descripcion,String urlImagen){
+    public BookItem(String titulo, String autor,Date publication_date, String descripcion,String urlImagen){
 
-        this.identificador=identificador;
+        this.identificador=getIdHash();
         this.title=titulo;
         this.author=autor;
         this.publication_date=publication_date;
@@ -61,6 +60,8 @@ public class BookItem extends SugarRecord {
     public void setIdentificador(int identificador) {
         this.identificador = identificador;
     }
+
+
 
     /**
      * Obtiene el título
@@ -145,4 +146,14 @@ public class BookItem extends SugarRecord {
     }
 
 
+
+   public int getIdHash(){
+        int hash = 1;
+        hash = hash * 17 + author.hashCode();
+        hash = hash * 31 + title.hashCode();
+        hash = hash * 13 + description.hashCode();
+        hash =hash*3 +url_image.hashCode();
+        hash=hash*5 +getPublication_date().hashCode();
+        return hash;
+    }
 }

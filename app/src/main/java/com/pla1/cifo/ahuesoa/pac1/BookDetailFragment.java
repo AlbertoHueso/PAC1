@@ -80,7 +80,7 @@ public class BookDetailFragment extends Fragment {
             String url_image=getArguments().getString(ARG_ITEM_URL_IMAGE);
          ;
             //Creamos el nuevo elemento BookItem
-            mItem=new BookItem(id,title,author,publication_date,description,url_image);
+            mItem=new BookItem(title,author,publication_date,description,url_image);
         }
     }
 
