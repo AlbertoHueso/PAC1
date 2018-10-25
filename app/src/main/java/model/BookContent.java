@@ -38,7 +38,7 @@ public class BookContent<BookItem> extends ArrayList {
            }
 
         }
-        catch (ArrayIndexOutOfBoundsException e){
+        catch (IndexOutOfBoundsException e){
             return false;
         }
 
