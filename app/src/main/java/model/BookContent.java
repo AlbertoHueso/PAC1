@@ -1,5 +1,7 @@
 package model;
 
+import com.pla1.cifo.ahuesoa.pac1.BookListActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +25,23 @@ public class BookContent<BookItem> extends ArrayList {
      * @param bookItem
      * @return Boolean que dice si está o no
      */
-    public  boolean exists(BookItem bookItem){
-        return this.contains(bookItem);
+    public  boolean exists(model.BookItem bookItem){
+        int index=bookItem.getIdentificador();
+        model.BookItem myBook;
+        try{
+           myBook=(model.BookItem) this.get(index);
+
+           if (myBook.getIdentificador()==bookItem.getIdentificador()){
+               return true;
+           }else{
+               return false;
+           }
+
+        }
+        catch (ArrayIndexOutOfBoundsException e){
+            return false;
+        }
+
     }
 
 

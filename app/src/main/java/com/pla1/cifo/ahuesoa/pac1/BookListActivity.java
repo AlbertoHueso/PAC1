@@ -2,6 +2,8 @@ package com.pla1.cifo.ahuesoa.pac1;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,7 +26,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
-import com.orm.SugarDb;
 import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
 import com.pla1.cifo.ahuesoa.pac1.dummy.Funciones;
 
@@ -63,13 +65,17 @@ public class BookListActivity extends AppCompatActivity {
      */
     BookContent books=null;
 
-
+    /**
+     * Variable que guardalos libros en local, si existen
+     */
+    BookContent bookLocals;
     @Override
     public void onStart() {
         super.onStart();
 
-      long a=BookItem.count(BookItem.class);
-      Log.d("contar",Long.toString(a));
+
+      bookLocals=Funciones.toBookContent(BookItem.listAll(BookItem.class));
+      Log.d("contar",Integer.toString(bookLocals.size()));
     }
 
     @Override
@@ -77,39 +83,40 @@ public class BookListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
 
-        SugarDb db = new SugarDb(this);
-        db.onCreate(db.getDB());
+        ConnectivityManager cm =
+                (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        //Tratamos de autorizar con un email y passwords
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
 
-        String email="who1@car.es";
-        String password="whoreallycares";
-        MyAuthoritation co=new MyAuthoritation(email,password,this);
+        if(isConnected) {
+            //Tratamos de autorizar con un email y passwords
 
-
-        //Ponemos dos conexiones porque si no,en ocasiones, falla al reconectar después de una ocasión fallida
-        co.connection();
-        co.connection();
-
-
+            String email = "who1@car.es";
+            String password = "whoreallycares";
+            MyAuthoritation co = new MyAuthoritation(email, password, this);
 
 
+            //Ponemos dos conexiones porque si no,en ocasiones, falla al reconectar después de una ocasión fallida
+            co.connection();
+            co.connection();
 
 
-        //Conexión a la base de datos y creación de la referencia. books es el nodo de los libros en la base de datos, de ahí el path
-        FirebaseDatabase database=FirebaseDatabase.getInstance();
-        DatabaseReference myRef=database.getReference("books");
+            //Conexión a la base de datos y creación de la referencia. books es el nodo de los libros en la base de datos, de ahí el path
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference("books");
 
-        // Leemos de la base de datos
-                    //Abrimos escuchador de eventos
+            // Leemos de la base de datos
+            //Abrimos escuchador de eventos
 
-                        Log.d("logindDespierto","despierto");
-                        myRef.addValueEventListener(new ValueEventListener() {
+            Log.d("logindDespierto", "despierto");
+            myRef.addValueEventListener(new ValueEventListener() {
 
 
-                            //Caso conexión a la base de datos exitosa
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
+                //Caso conexión a la base de datos exitosa
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
 
                                             /*
                                             *SE CONSERVA ESTE FRAGMENTO CON PROPÓSITOS DE APRENDIZAJE***
@@ -133,54 +140,56 @@ public class BookListActivity extends AppCompatActivity {
                                             */
 
 
-                                //Cargamos los libros leídos de la base de datos de Firebase en books
-                                try {
+                    //Cargamos los libros leídos de la base de datos de Firebase en books
+                    try {
 
-                                    GenericTypeIndicator<BookContent<BookItem>> t = new GenericTypeIndicator<BookContent<BookItem>>() {
-                                    };
+                        GenericTypeIndicator<BookContent<BookItem>> t = new GenericTypeIndicator<BookContent<BookItem>>() {
+                        };
 
-                                    //Cargamos los libros del snapshot en un ArrayList
-                                    //No podemos hacerlo en un BookContent directamente porque el casting no funciona
-                                    ArrayList<BookItem> booksArray = dataSnapshot.getValue(t);
-
-
-
-                                    //Guardamos el booksArray en el BookContent
-                                    books = Funciones.toBookContent(booksArray);
+                        //Cargamos los libros del snapshot en un ArrayList
+                        //No podemos hacerlo en un BookContent directamente porque el casting no funciona
+                        ArrayList<BookItem> booksArray = dataSnapshot.getValue(t);
 
 
-                                    //Cargamos los libros en la vista
-                                    loadItemList(books);
-
-                                    //Actualizamos sus identificadores
-                                    updateIdentificators(books);
-
-                                    //Actualizamos la conexión
-                                    conexion=true;
-
-                                } catch (Exception e) {
-                                    //Cargamos la lista Dummy
-                                    loadItemList(DummyContent.ITEMS);
-                                    Log.d("dummy","dummy2");
-                                    System.err.println(e.getMessage());
-                                    e.printStackTrace();
-                                }
-                            }
+                        //Guardamos el booksArray en el BookContent
+                        books = Funciones.toBookContent(booksArray);
 
 
-                            //Conexión a la base de datos fallida
-                            @Override
-                            public void onCancelled(DatabaseError error) {
-                                // Error al leer el valor
-                                Log.e("lecturaError", "Failed to read value.", error.toException());
-                                //Cargamos la lista Dummy
-                                loadItemList(DummyContent.ITEMS);
-                                Log.d("loginDummy","dummy3");
-                            }
-                        });
+                        //Cargamos los libros en la vista
+                        loadItemList(books);
+
+                        //Actualizamos sus identificadores
+                        updateIdentificatorsAndSaveNewItemsLocally(books);
+
+                        //Actualizamos la conexión
+                        conexion = true;
+
+                    } catch (Exception e) {
+                        //Cargamos la lista Dummy
+                        loadItemList(DummyContent.ITEMS);
+                        Log.d("dummy", "dummy2");
+                        System.err.println(e.getMessage());
+                        e.printStackTrace();
+                    }
+                }
 
 
+                //Conexión a la base de datos fallida
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Error al leer el valor
+                    Log.e("lecturaError", "Failed to read value.", error.toException());
+                    //Cargamos la lista Dummy
+                    loadItemList(DummyContent.ITEMS);
+                    Log.d("loginDummy", "dummy3");
+                }
+            });
 
+
+        }
+        else {
+
+        }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
@@ -363,7 +372,7 @@ public class BookListActivity extends AppCompatActivity {
      * Método que a cada libro de una lista le asigna como identificador su posición en la lista
      * @param books
      */
-    private void updateIdentificators(List<BookItem> books){
+    private void updateIdentificatorsAndSaveNewItemsLocally(List<BookItem> books){
 
         int identificador=0;
         Iterator<BookItem> it=books.iterator();
@@ -373,13 +382,29 @@ public class BookListActivity extends AppCompatActivity {
             book.setId((long)identificador);
             identificador++;
 
-            if (BookItem.count(BookItem.class)==-1){
+            if (bookLocals.size()==0){
                 BookItem.save(book);
+                bookLocals.add(book);
+                Log.d("añadido",book.getAuthor());
+            }
 
+            if (!bookLocals.exists(book)){
+                Log.d("añadido2",book.getAuthor());
+                BookItem.save(book);
+                bookLocals.add(book);
+
+            }else {
+                Log.d("Noañadido3",book.getAuthor());
             }
         }
 
     }
 
-
+    private void showDataLocal(){
+        if (bookLocals.size()==0 || bookLocals==null){
+            loadItemList(DummyContent.ITEMS);
+            Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION TO EXTERNAL DATABASE/nNO DATA LOCALE", Toast.LENGTH_LONG);
+            toast.show();
+        }
+    }
 }

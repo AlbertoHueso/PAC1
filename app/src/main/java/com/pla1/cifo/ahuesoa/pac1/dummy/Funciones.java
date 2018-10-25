@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 
 import model.BookContent;
 import model.BookItem;
@@ -50,7 +51,7 @@ public class Funciones {
      * @param booksArrayList
      * @return BookContent con los libros BookItem del ArrayList
      */
-    public static BookContent toBookContent(ArrayList<BookItem> booksArrayList){
+    public static BookContent toBookContent(List<BookItem> booksArrayList){
         BookContent books=new BookContent();
         Iterator it=booksArrayList.iterator();
         while (it.hasNext()){
