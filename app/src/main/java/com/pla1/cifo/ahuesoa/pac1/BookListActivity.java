@@ -84,10 +84,9 @@ public class BookListActivity extends AppCompatActivity {
         MyAuthoritation co=new MyAuthoritation(email,password,this);
 
 
-        //Se hacen dos intentos porque si no no conectaría al volver a abrir la APP
+        //Ponemos dos conexiones porque si no,en ocasiones, falla al reconectar después de una ocasión fallida
         co.connection();
         co.connection();
-
 
 
 
@@ -101,7 +100,7 @@ public class BookListActivity extends AppCompatActivity {
         // Leemos de la base de datos
                     //Abrimos escuchador de eventos
 
-
+                        Log.d("logindDespierto","despierto");
                         myRef.addValueEventListener(new ValueEventListener() {
 
 
@@ -173,7 +172,7 @@ public class BookListActivity extends AppCompatActivity {
                                 Log.e("lecturaError", "Failed to read value.", error.toException());
                                 //Cargamos la lista Dummy
                                 loadItemList(DummyContent.ITEMS);
-                                Log.d("dummy","dummy3");
+                                Log.d("loginDummy","dummy3");
                             }
                         });
 

@@ -46,10 +46,6 @@ public class MyAuthoritation {
      */
     public void connection(){
 
-        //Desconectamos para que no se mantenga una conexión exitosa previa con un usuario o clave actuales erróneos
-        mAuth.signOut();
-
-
         //Registro con correo y clave
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(mActivity, new OnCompleteListener<AuthResult>()
         {
@@ -67,7 +63,8 @@ public class MyAuthoritation {
                 {
                     Log.e("failureLogin", "signInWithEmail:failure", task.getException());
                     Log.e("noSuccessfullogin","no success");
-                    //mAuth.signOut();//Desconectamos el usuario
+                    //Desconectamos para que no se mantenga una conexión exitosa previa con un usuario o clave actuales erróneos
+                    mAuth.signOut();
 
                 }
 
