@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 /**
  * Clase que se ocupa de realizar la autorizacion a Firebase
  */
-public class MyAuthoritation {
+public class MyAuthoritation extends Thread {
     /*Correo con el que se autorizará*/
     private String email;
     /*Clave con la que se autorizará*/
@@ -21,8 +21,7 @@ public class MyAuthoritation {
     private FirebaseAuth mAuth;
     /*Actividad en la que se está intentando la autorización*/
     private Activity mActivity;
-    /*Estado de la conexión*/
-    private boolean conexion;
+
 
     /**
      * Constructor de MyAuthorization
@@ -36,7 +35,7 @@ public class MyAuthoritation {
         this.password=password;
         this.mAuth=FirebaseAuth.getInstance();
         this.mActivity=mActivity;
-        this.conexion=false;
+
     }
 
 
@@ -44,7 +43,10 @@ public class MyAuthoritation {
      * Método para realizar la autorización en Firebase con el email y la clave indicadas en la construcción
 
      */
-    public void connection(){
+
+    public void run(){
+
+        mAuth.signOut();
 
         //Registro con correo y clave
         mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(mActivity, new OnCompleteListener<AuthResult>()
@@ -54,7 +56,7 @@ public class MyAuthoritation {
             {
                 if (task.isSuccessful())
                 {
-                    conexion=true;//Actualizamos el valor de la conexion
+
                     Log.i("LoginSuccess", "signInWithEmail:success :"+mAuth.getCurrentUser().getUid());
 
                 }
@@ -73,11 +75,9 @@ public class MyAuthoritation {
         });
 
 
+
     }
 
-    public boolean isConexion() {
-        return conexion;
-    }
 
 
 }

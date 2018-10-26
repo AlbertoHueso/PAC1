@@ -29,12 +29,13 @@ public class BookItem extends SugarRecord {
      */
     public BookItem(String titulo, String autor,Date publication_date, String descripcion,String urlImagen){
 
-        this.identificador=getIdHash();
+
         this.title=titulo;
         this.author=autor;
         this.publication_date=publication_date;
         this.description=descripcion;
         this.url_image=urlImagen;
+        this.identificador=getIdHash();
 
     }
 

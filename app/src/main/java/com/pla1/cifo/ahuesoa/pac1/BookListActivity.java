@@ -17,21 +17,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.GenericTypeIndicator;
-import com.google.firebase.database.ValueEventListener;
-
-
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import model.BookContent;
 import model.BookItem;
 
@@ -95,76 +85,18 @@ public class BookListActivity extends AppCompatActivity {
 
             String email = "who1@car.es";
             String password = "whoreallycares";
+
             MyAuthoritation co = new MyAuthoritation(email, password, this);
-
-
-            //Ponemos dos conexiones porque si no,en ocasiones, falla al reconectar después de una ocasión fallida
-            co.connection();
-            co.connection();
+            co.start();
 
 
             //Conexión a la base de datos y creación de la referencia. books es el nodo de los libros en la base de datos, de ahí el path
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef = database.getReference("books");
 
-            // Leemos de la base de datos
-            //Abrimos escuchador de eventos
+            ConexionDatabase conexionDatabase=new ConexionDatabase(getApplicationContext(),this,books);
+            conexionDatabase.start();
 
-
-            myRef.addValueEventListener(new ValueEventListener() {
-
-
-                //Caso conexión a la base de datos exitosa
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-                    //Cargamos los libros leídos de la base de datos de Firebase en books
-                    try {
-
-                        GenericTypeIndicator<BookContent<BookItem>> t = new GenericTypeIndicator<BookContent<BookItem>>() {
-                        };
-
-                        //Cargamos los libros del snapshot en un ArrayList
-                        //No podemos hacerlo en un BookContent directamente porque el casting no funciona
-                        ArrayList<BookItem> booksArray = dataSnapshot.getValue(t);
-
-
-                        //Guardamos el booksArray en el BookContent
-                        books = Funciones.toBookContent(booksArray);
-
-
-                        //Cargamos los libros en la vista
-                        loadItemList(books);
-
-                        Toast toast = Toast.makeText(getApplicationContext(), "CONNECTED TO EXTERNAL DATABASE\nREADING FROM FIREBASE DATABASE", Toast.LENGTH_LONG);
-                        toast.show();
-
-                        //Actualizamos sus identificadores
-                        updateIdentificatorsAndSaveNewItemsLocally(books);
-
-                        //Actualizamos la conexión
-                        conexion = true;
-
-                    } catch (Exception e) {
-                        //Cargamos datosLocales
-                        showLocalData();
-                        System.err.println(e.getMessage());
-                        e.printStackTrace();
-                    }
-                }
-
-
-                //Conexión a la base de datos fallida
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    // Error al leer el valor
-                    Log.e("lecturaError", "Failed to read value.", error.toException());
-                    //Cargamos datosLocales
-                    showLocalData();
-
-                }
-            });
 
 
         }
@@ -345,7 +277,7 @@ public class BookListActivity extends AppCompatActivity {
      * Método que carga una lista de libros en la vista de la página
      * @param books
      */
-    private void loadItemList(List<BookItem> books){
+    public void loadItemList(List<BookItem> books){
         View recyclerView = findViewById(R.id.item_list);
         assert recyclerView != null;
         setupRecyclerView((RecyclerView) recyclerView,books);
@@ -358,7 +290,7 @@ public class BookListActivity extends AppCompatActivity {
      * Se hace aquí para no tener que recorrer de nuevo el array, aunque se sacrifica la encapsulación
      * @param books
      */
-    private void updateIdentificatorsAndSaveNewItemsLocally(List<BookItem> books){
+    public void updateIdentificatorsAndSaveNewItemsLocally(List<BookItem> books){
 
         int identificador=0;
         Iterator<BookItem> it=books.iterator();
@@ -386,7 +318,7 @@ public class BookListActivity extends AppCompatActivity {
     /**
      * Método que muestra los datos locales.Si no hay datos locales muestra el contenido Dummy
      */
-    private void showLocalData(){
+    public  void showLocalData(){
         //No hay datos locales, bookLocals es nulo
         if (bookLocals==null){
 
