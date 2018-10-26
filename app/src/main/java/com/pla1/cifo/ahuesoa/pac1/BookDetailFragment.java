@@ -97,7 +97,7 @@ public class BookDetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.book_detail, container, false);
 
-        // Mostramos el contenido Dummy
+        // Mostramos el contenido del fragmento
         if (mItem != null) {
             //Obtenemos cada elemento del layout que contendrá datos
             ((TextView) rootView.findViewById(R.id.author)).setText(mItem.getAuthor());
@@ -106,28 +106,12 @@ public class BookDetailFragment extends Fragment {
             //Obtenemos elcontenedor de la imagen imagen
            ImageView imagen=rootView.findViewById(R.id.portada);
 
-            //Asignamos la url de la imagenal contenedor de la imagen utilizando la librería Picasso
+            //Asignamos la url de la imagen al contenedor de la misma utilizando la librería Picasso
             Picasso.with(this.getContext()).load(mItem.getUrl_image()).into(imagen);
 
-
-
-            /*
-            *ANTIGUO CÓDIGO, SE CONSERVA POR RAZONES DE APRENDIZAJE
-                    *
-                    //obtenemos la url de la imagen, en funcion del identificador de cada dummyitem
-                    int img = getResources().getIdentifier("@drawable/juego_ender"+ mItem.getIdentificador(), "drawable",getContext().getPackageName());
-
-
-                    //Asignamos al contenedor de la imagen la imagen del archivo directorio drawable
-                    imagen.setImageResource(img);
-
-                    //imagen.setImageResource(R.drawable.juego_ender); Sería el método para añadir directamente una imagen, sin parametrizar
-            */
-
-
-
-
         }
+
+
         Activity activity = this.getActivity();
         CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
         if (appBarLayout != null) {

@@ -11,11 +11,34 @@ import java.util.Date;
  */
 public class BookItem extends SugarRecord {
 
+    /**
+     * Identificador único
+     */
     private int identificador;
+
+    /**
+     * Título del libro
+     */
     private String title;
+
+    /**
+     * Autor del libro
+     */
     private String author;
+
+    /**
+     * Fecha de publicación del libro
+     */
     private Date publication_date;
+
+    /**
+     * Descripción del libro
+     */
     private String description;
+
+    /**
+     * URL de la portada del libro
+     */
     private String url_image;
 
 
@@ -35,11 +58,12 @@ public class BookItem extends SugarRecord {
         this.publication_date=publication_date;
         this.description=descripcion;
         this.url_image=urlImagen;
+        //El identificador se obtiene con una función Hash
         this.identificador=getIdHash();
 
     }
 
-    /**Constructor vacío, necesario para que se puedan crear objetos BookItem desde Firebase
+    /**Constructor vacío, necesario para que se puedan crear objetos BookItem desde la base de datos de Firebase
      *
      */
     public BookItem(){
@@ -147,7 +171,10 @@ public class BookItem extends SugarRecord {
     }
 
 
-
+    /**
+     * Función que a partir de los datos del libro genera un identificador mediante función Hash
+     * @return int Identificador único del libro
+     */
    public int getIdHash(){
         int hash = 1;
         hash = hash * 17 + author.hashCode();

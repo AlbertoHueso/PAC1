@@ -11,6 +11,9 @@ import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * Clase que se ocupa de realizar la autorizacion a Firebase
+ * Es subclase de Thread porque al ser un hilo diferente
+ * a la conexión a la base de datos se puede retrasar esta última
+ * y dar tiempo a que se compruebe la autorización
  */
 public class MyAuthoritation extends Thread {
     /*Correo con el que se autorizará*/
@@ -41,11 +44,12 @@ public class MyAuthoritation extends Thread {
 
     /**
      * Método para realizar la autorización en Firebase con el email y la clave indicadas en la construcción
-
+    *
      */
 
     public void run(){
 
+        //Para evitar mantener una autorización válida previa en caso de que no se consiga
         mAuth.signOut();
 
         //Registro con correo y clave
@@ -54,6 +58,7 @@ public class MyAuthoritation extends Thread {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task)
             {
+                //Autorización exitosa
                 if (task.isSuccessful())
                 {
 
@@ -61,6 +66,7 @@ public class MyAuthoritation extends Thread {
 
                 }
 
+                //Autorización no exitosa
                 else
                 {
                     Log.e("failureLogin", "signInWithEmail:failure", task.getException());

@@ -29,12 +29,13 @@ import model.BookContent;
 import model.BookItem;
 
 /**
- * An activity representing a list of Items. This activity
- * has different presentations for handset and tablet-size devices. On
- * handsets, the activity presents a list of items, which when touched,
- * lead to a {@link BookDetailActivity} representing
- * item details. On tablets, the activity presents the list of items and
- * item details side-by-side using two vertical panes.
+ * Actividad que intenta conectar con la base de datos de Firebase,
+ * si lo consigue muestra los libros, si no, muestra los libros en la memoria local SugarOrm
+ * Los libros se pueden clickar y abrirán la actividad BookDetailActivity
+ * @see ConexionDatabase
+ * @see MyAuthoritation
+ * @see BookDetailFragment
+ * @see BookDetailFragment
  */
 public class BookListActivity extends AppCompatActivity {
 
@@ -58,9 +59,13 @@ public class BookListActivity extends AppCompatActivity {
     BookContent books=null;
 
     /**
-     * Variable que guardalos libros en local, si existen
+     * Variable que guarda los libros en local, si existen
      */
     BookContent bookLocals;
+
+
+
+
     @Override
     public void onStart() {
         super.onStart();
@@ -72,38 +77,36 @@ public class BookListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
 
+        //Actualizamos bookLocals con los libros de la base de datos local
         bookLocals=Funciones.toBookContent(BookItem.listAll(BookItem.class));
-        Log.d("contar",Integer.toString(bookLocals.size()));
 
+
+        //Comprobamos si hay conexión a la red
         ConnectivityManager cm =
                 (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
 
-
+        //Si está conectado se trata de autorizar y leer la base de datos
         if(isConnected) {
-            //Tratamos de autorizar con un email y passwords
 
+
+            //Tratamos de autorizar con un email y passwords
             String email = "who1@car.es";
             String password = "whoreallycares";
 
+            //Autorizamos
             MyAuthoritation co = new MyAuthoritation(email, password, this);
             co.start();
 
-
-            //Conexión a la base de datos y creación de la referencia. books es el nodo de los libros en la base de datos, de ahí el path
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference myRef = database.getReference("books");
-
+            //Conectamos a la base de datos
             ConexionDatabase conexionDatabase=new ConexionDatabase(getApplicationContext(),this,books);
             conexionDatabase.start();
-
-
-
         }
-        //No conectado, se muestran datos locales
+
+
+        //No conectado a la red, se muestran datos locales
         else {
             showLocalData();
         }
@@ -158,7 +161,7 @@ public class BookListActivity extends AppCompatActivity {
                 if (mTwoPane) {
 
 
-                    //Añadimos los argumentos que se envían al nuevo panel
+                    //Añadimos los argumentos que se envían al panel lateral
                     Bundle arguments = new Bundle();
                     //Pasamos la POSICION como item_ID
                     arguments.putString(BookDetailFragment.ARG_ITEM_ID, Integer.toString(item.getIdentificador()));
@@ -295,7 +298,7 @@ public class BookListActivity extends AppCompatActivity {
      */
     public void updateIdentificatorsAndSaveNewItemsLocally(List<BookItem> books){
 
-        int identificador=0;
+
         Iterator<BookItem> it=books.iterator();
 
         //Recorremos la lista de books
@@ -307,7 +310,7 @@ public class BookListActivity extends AppCompatActivity {
 
 
 
-            //Si el libro no está en bookLocals se añade
+            //Si el libro no está en bookLocals se añade y se guarda en la base de datos local
             if (!bookLocals.exists(book)){
 
                 BookItem.save(book);
@@ -323,16 +326,20 @@ public class BookListActivity extends AppCompatActivity {
      */
     public  void showLocalData(){
 
+        //Recuperamos la view de la actividad
         View view=findViewById(android.R.id.content);
+        //Cambiamos el color a los dos elementos del fondo, de esta manera se hace más evidente que estamos en localdata
         view.findViewById(R.id.frameLayout).setBackgroundColor(Color.LTGRAY);
         view.findViewById(R.id.item_list).setBackgroundColor(Color.LTGRAY);
+
         //No hay datos locales, bookLocals es nulo
         if (bookLocals==null){
-
+            loadItemList(DummyContent.ITEMS);
             Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION TO EXTERNAL DATABASE\nNO LOCAL DATA\nPLEASE TRY AGAIN", Toast.LENGTH_LONG);
             toast.show();
+
         }else {
-          //Hay datos locales y hay libros cargados en bookLocals, se muetran
+          //Hay datos locales y hay libros cargados en bookLocals, se muestran
           if(bookLocals.size()>0) {
               Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION TO EXTERNAL DATABASE\nREADING LOCAL DATA", Toast.LENGTH_LONG);
               toast.show();
