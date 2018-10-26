@@ -2,6 +2,7 @@ package com.pla1.cifo.ahuesoa.pac1;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -20,6 +21,8 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
+
 import java.util.Iterator;
 import java.util.List;
 import model.BookContent;
@@ -319,6 +322,10 @@ public class BookListActivity extends AppCompatActivity {
      * Método que muestra los datos locales.Si no hay datos locales muestra el contenido Dummy
      */
     public  void showLocalData(){
+
+        View view=findViewById(android.R.id.content);
+        view.findViewById(R.id.frameLayout).setBackgroundColor(Color.LTGRAY);
+        view.findViewById(R.id.item_list).setBackgroundColor(Color.LTGRAY);
         //No hay datos locales, bookLocals es nulo
         if (bookLocals==null){
 
@@ -333,7 +340,7 @@ public class BookListActivity extends AppCompatActivity {
 
            //No hay libros cargados en bookLocals, se muestra el contenido Dummy
           }else {
-
+              loadItemList(DummyContent.ITEMS);
               Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION TO EXTERNAL DATABASE\nNO LOCAL DATA\nPLEASE TRY AGAIN", Toast.LENGTH_LONG);
               toast.show();
           }
