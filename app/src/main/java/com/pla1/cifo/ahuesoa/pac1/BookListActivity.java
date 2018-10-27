@@ -163,6 +163,7 @@ public class BookListActivity extends AppCompatActivity {
 
                 BookItem  item= (BookItem) view.getTag();
 
+                //Caso dos paneles
                 if (mTwoPane) {
 
 
@@ -181,6 +182,8 @@ public class BookListActivity extends AppCompatActivity {
                     mParentActivity.getSupportFragmentManager().beginTransaction()
                             .replace(R.id.item_detail_container, fragment)
                             .commit();
+
+                    //Caso un panel
                 } else {
                     Context context = view.getContext();
                     Intent intent = new Intent(context, BookDetailActivity.class);
@@ -296,12 +299,12 @@ public class BookListActivity extends AppCompatActivity {
 
 
     /**
-     * Método que a cada libro de una lista le asigna como identificador su posición en la lista
-     * Además, si el libro no está en bookLocals lo añade a este y a la base de datos local
-     * Se hace aquí para no tener que recorrer de nuevo el array, aunque se sacrifica la encapsulación
+     * Método que a cada libro de una lista le asigna un identificador a partir de una funcion Hash
+     *
      * @param books
+     * @see BookItem#getIdHash() ;
      */
-    public void updateIdentificatorsAndSaveNewItemsLocally(List<BookItem> books){
+    public void updateIdentificators(List<BookItem> books){
 
 
         Iterator<BookItem> it=books.iterator();
@@ -314,6 +317,22 @@ public class BookListActivity extends AppCompatActivity {
             book.setId((long)book.getIdentificador());
 
 
+        }
+
+    }
+
+    /**
+     * Método si el libro no está en bookLocals lo añade a este y a la base de datos local     *
+     * @param books
+     */
+    public void SaveNewItemsLocally(List<BookItem> books){
+
+
+        Iterator<BookItem> it=books.iterator();
+
+        //Recorremos la lista de books
+        while (it.hasNext()){
+            BookItem book= it.next();
 
             //Si el libro no está en bookLocals se añade y se guarda en la base de datos local
             if (!bookLocals.exists(book)){
@@ -435,7 +454,10 @@ public class BookListActivity extends AppCompatActivity {
                         toast.show();
 
                         //Actualizamos los identificadores, ya que desde Firebase vienen todos a 0
-                        updateIdentificatorsAndSaveNewItemsLocally(books);
+                        updateIdentificators(books);
+
+                        //Guardamos los nuevos libros en la base de datos local
+                        SaveNewItemsLocally(books);
 
                         //Hay algún problema
                     } catch (Exception e) {
