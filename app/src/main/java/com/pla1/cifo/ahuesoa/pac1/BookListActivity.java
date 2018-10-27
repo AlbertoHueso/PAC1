@@ -114,6 +114,7 @@ public class BookListActivity extends AppCompatActivity {
         //No conectado a la red, se muestran datos locales
         else {
             showLocalData();
+
         }
 
 
@@ -459,6 +460,9 @@ public class BookListActivity extends AppCompatActivity {
                         //Guardamos los nuevos libros en la base de datos local
                         SaveNewItemsLocally(books);
 
+                        //Retiramos el escuchador para evitar interferencias al rotar
+                        myRef.removeEventListener(this);
+
                         //Hay algún problema
                     } catch (Exception e) {
                         //Cargamos datosLocales
@@ -473,9 +477,12 @@ public class BookListActivity extends AppCompatActivity {
                 @Override
                 public void onCancelled(DatabaseError error) {
                     // Error al leer el valor
-                    Log.e("lecturaError", "Failed to read value.", error.toException());
+                    Log.e("readError", "Failed to read value.", error.toException());
                     //Cargamos datosLocales
                     showLocalData();
+
+                    //Retiramos el escuchador para evitar interferencias al rotar
+                    myRef.removeEventListener(this);
 
                 }
             });

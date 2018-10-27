@@ -17,7 +17,9 @@
     master/detail flow.
     
     -->
-
+    <android.support.v4.widget.SwipeRefreshLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="@dimen/item_width"
+        android:layout_height="match_parent">
     <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/item_list"
@@ -29,6 +31,7 @@
         app:layoutManager="LinearLayoutManager"
         tools:context="com.pla1.cifo.ahuesoa.pac1.BookListActivity"
         tools:listitem="@layout/book_list_content" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <FrameLayout
         android:id="@+id/item_detail_container"
