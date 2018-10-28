@@ -29,6 +29,7 @@ import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import com.pla1.cifo.ahuesoa.pac1.model.BookContent;
 import com.pla1.cifo.ahuesoa.pac1.model.BookItem;
 
@@ -57,12 +58,9 @@ public class BookListActivity extends AppCompatActivity {
     /**
      * Variable que guarda los libros cargados en memoria para mostrar
      */
-    private BookContent books=null;
+    private List<BookItem> books=null;
 
-    /**
-     * Variable que guarda los libros en local, si existen
-     */
-    private BookContent bookLocals;
+
 
     /**
      * Variable que guarda el SwipeRefreshLayout
@@ -82,8 +80,6 @@ public class BookListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
 
-        //Actualizamos bookLocals con los libros de la base de datos local
-        bookLocals= (new BookContent()).BookContent();
 
         //Cargamos el swipe_container
         swipeContainer= (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
@@ -160,11 +156,7 @@ public class BookListActivity extends AppCompatActivity {
                     //Añadimos los argumentos que se envían al panel lateral
                     Bundle arguments = new Bundle();
                     arguments.putString(BookDetailFragment.ARG_ITEM_ID, Integer.toString(item.getIdentificador()));
-                    arguments.putString(BookDetailFragment.ARG_ITEM_TITLE, item.getTitle());
-                    arguments.putString(BookDetailFragment.ARG_ITEM_AUTHOR, item.getAuthor());
-                    arguments.putString(BookDetailFragment.ARG_ITEM_DESCRIPTION, item.getDescription());
-                    arguments.putString(BookDetailFragment.ARG_ITEM_URL_IMAGE, item.getUrl_image());
-                    arguments.putString(BookDetailFragment.ARG_ITEM_PUBLICATION_DATE, item.getPublication_date());
+
 
                     BookDetailFragment fragment = new BookDetailFragment();
                     fragment.setArguments(arguments);
@@ -179,11 +171,6 @@ public class BookListActivity extends AppCompatActivity {
 
                     //Añadimos los argumentos que se envían a la nueva actividad
                     intent.putExtra(BookDetailFragment.ARG_ITEM_ID, Integer.toString(item.getIdentificador()));
-                    intent.putExtra(BookDetailFragment.ARG_ITEM_TITLE, item.getTitle());
-                    intent.putExtra(BookDetailFragment.ARG_ITEM_AUTHOR, item.getAuthor());
-                    intent.putExtra(BookDetailFragment.ARG_ITEM_DESCRIPTION, item.getDescription());
-                    intent.putExtra(BookDetailFragment.ARG_ITEM_URL_IMAGE, item.getUrl_image());
-                    intent.putExtra(BookDetailFragment.ARG_ITEM_PUBLICATION_DATE, item.getPublication_date());
 
                     //Se inicia la nueva actividad
                     context.startActivity(intent);
@@ -324,10 +311,10 @@ public class BookListActivity extends AppCompatActivity {
             BookItem book= it.next();
 
             //Si el libro no está en bookLocals se añade y se guarda en la base de datos local
-            if (!bookLocals.exists(book)){
+            if (!BookContent.exists(book)){
 
                 BookItem.save(book);
-                bookLocals.add(book);
+                BookContent.addBook(book);
 
             }
         }
@@ -346,17 +333,17 @@ public class BookListActivity extends AppCompatActivity {
         view.findViewById(R.id.item_list).setBackgroundColor(Color.LTGRAY);
 
         //No hay datos locales, bookLocals es nulo
-        if (bookLocals==null){
+        if (BookContent.getBooks()==null){
             loadItemList(DummyContent.ITEMS);
             Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION TO EXTERNAL DATABASE\nNO LOCAL DATA\nPLEASE TRY AGAIN", Toast.LENGTH_LONG);
             toast.show();
 
         }else {
           //Hay datos locales y hay libros cargados en bookLocals, se muestran
-          if(bookLocals.size()>0) {
+          if(BookContent.getBooks().size()>0) {
               Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION TO EXTERNAL DATABASE\nREADING LOCAL DATA", Toast.LENGTH_LONG);
               toast.show();
-              loadItemList(bookLocals);
+              loadItemList(BookContent.getBooks());
 
            //No hay libros cargados en bookLocals, se muestra el contenido Dummy
           }else {
@@ -425,16 +412,15 @@ public class BookListActivity extends AppCompatActivity {
                     //Cargamos los libros leídos de la base de datos de Firebase en books
                     try {
 
-                        GenericTypeIndicator<BookContent<BookItem>> t = new GenericTypeIndicator<BookContent<BookItem>>() {
+                        GenericTypeIndicator<ArrayList<BookItem>> t = new GenericTypeIndicator<ArrayList<BookItem>>() {
                         };
 
                         //Cargamos los libros del snapshot en un ArrayList
                         //No podemos hacerlo en un BookContent directamente porque el casting no funciona
-                        ArrayList<BookItem> booksArray = dataSnapshot.getValue(t);
+                        books = (ArrayList<BookItem>) dataSnapshot.getValue(t);
 
 
-                        //Guardamos el booksArray en el BookContent
-                        books = Funciones.toBookContent(booksArray);
+
 
 
                         //Cargamos los libros en la actividad

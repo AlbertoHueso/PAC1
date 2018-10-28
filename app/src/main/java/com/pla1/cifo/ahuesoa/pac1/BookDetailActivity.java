@@ -57,6 +57,7 @@ public class BookDetailActivity extends AppCompatActivity {
             Bundle arguments = new Bundle();
             arguments.putString(BookDetailFragment.ARG_ITEM_ID,
                     getIntent().getStringExtra(BookDetailFragment.ARG_ITEM_ID));
+            /*
             arguments.putString(BookDetailFragment.ARG_ITEM_TITLE,
                     getIntent().getStringExtra(BookDetailFragment.ARG_ITEM_TITLE));
             arguments.putString(BookDetailFragment.ARG_ITEM_AUTHOR,
@@ -67,8 +68,10 @@ public class BookDetailActivity extends AppCompatActivity {
                     getIntent().getStringExtra(BookDetailFragment.ARG_ITEM_PUBLICATION_DATE));
             arguments.putString(BookDetailFragment.ARG_ITEM_DESCRIPTION,
                     getIntent().getStringExtra(BookDetailFragment.ARG_ITEM_DESCRIPTION));;
+                    */
             BookDetailFragment fragment = new BookDetailFragment();
             fragment.setArguments(arguments);
+
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.item_detail_container, fragment)
                     .commit();

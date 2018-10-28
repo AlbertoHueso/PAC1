@@ -45,11 +45,12 @@ public class Funciones {
         return date;
     }
 
+    /*
     /**
      * Método para convertir un ArrayList de BookItem en un BookContent
      * @param booksArrayList
      * @return BookContent con los libros BookItem del ArrayList
-     */
+
     public static BookContent toBookContent(List<BookItem> booksArrayList){
         BookContent books=new BookContent();
         Iterator it=booksArrayList.iterator();
@@ -57,5 +58,6 @@ public class Funciones {
            books.add( it.next());
         }
         return books;
-    }
+    }*/
+
 }

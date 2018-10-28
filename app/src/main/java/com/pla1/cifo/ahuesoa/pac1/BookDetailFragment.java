@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.pla1.cifo.ahuesoa.pac1.model.BookContent;
 import com.squareup.picasso.Picasso;
 
 import java.util.Date;
@@ -55,6 +56,10 @@ public class BookDetailFragment extends Fragment {
     private BookItem mItem;
 
     /**
+     * Libros locales
+     */
+    private BookContent books;
+    /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
@@ -73,14 +78,19 @@ public class BookDetailFragment extends Fragment {
 
             //Obtenemos los argumentos pasados al fragmento desde otra actividad, los datos de cada libro
             int id=Integer.parseInt(getArguments().getString(ARG_ITEM_ID));
+
+             mItem=BookContent.BOOKS_MAP.get(id);
+            /*
             String title=getArguments().getString(ARG_ITEM_TITLE);
             String description=getArguments().getString(ARG_ITEM_DESCRIPTION);
             Date publication_date= Funciones.getDateFromString(getArguments().getString(ARG_ITEM_PUBLICATION_DATE));
             String author= getArguments().getString(ARG_ITEM_AUTHOR);
             String url_image=getArguments().getString(ARG_ITEM_URL_IMAGE);
+
          ;
             //Creamos el nuevo elemento BookItem
             mItem=new BookItem(title,author,publication_date,description,url_image);
+            */
         }
     }
 

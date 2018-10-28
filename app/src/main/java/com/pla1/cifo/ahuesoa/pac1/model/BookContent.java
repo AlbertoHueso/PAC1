@@ -3,59 +3,64 @@ package com.pla1.cifo.ahuesoa.pac1.model;
 import com.pla1.cifo.ahuesoa.pac1.Funciones;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Clase que representa el conjunto de libros
- * @param <BookItem>
  */
-public class BookContent<BookItem> extends ArrayList {
+public class BookContent {
 
 
     /**
-     * Método que obtiene un BookContent con los datos en local
-     * @return
+     * Array de Libros.
      */
-    public BookContent BookContent() {
+    public static final List<BookItem> BOOKS = new ArrayList<BookItem>();
 
-       BookContent myBooks=Funciones.toBookContent(com.pla1.cifo.ahuesoa.pac1.model.BookItem.listAll(com.pla1.cifo.ahuesoa.pac1.model.BookItem.class));
-        return myBooks;
+    /**
+     * Array de libros en un HashMap.
+     */
+    public static final Map<String, BookItem> BOOKS_MAP = new HashMap<String, BookItem>();
+
+    private static final BookContent uniqueBooks=new BookContent();
+    /**
+     * Constructor privado, así solo habrá una instancia de BookContent, siguiendo el patrón Singleton
+     */
+    private BookContent() {
     }
 
-
+    /**
+     * Añadimos el libro book al mapa
+     * @param book
+     */
+    public static void addBook(BookItem book) {
+        BOOKS.add(book);
+        BOOKS_MAP.put(Integer.toString(book.getIdentificador()), book);
+    }
 
     /**
-     * Retorna si el libro bookItem está en BookContent
-     * Si no existe un elemento de BookContent en el índice igual al identificador del libro devuelve false
-     * Si existe y sus identificadores son iguales devuelve true
+     * Método que devuelve si BookContent contiene un bookItem
      * @param bookItem
-     * @return Boolean que dice si está o no
+     * @return true si lo contiene y false en caso contrario.
      */
-    public  boolean exists(com.pla1.cifo.ahuesoa.pac1.model.BookItem bookItem){
-        int index=bookItem.getIdentificador();
-        com.pla1.cifo.ahuesoa.pac1.model.BookItem myBook;
-        try{
-           myBook=(com.pla1.cifo.ahuesoa.pac1.model.BookItem) this.get(index);
-
-           //Coinciden los identificadores, devuelve true, en el resto de casos false
-           if (myBook.getIdentificador()==bookItem.getIdentificador()){
-               return true;
-           }else{
-               return false;
-           }
-
+    public static boolean exists(BookItem bookItem){
+        boolean exist=false;
+        int identificador=bookItem.getIdentificador();
+        if (BOOKS_MAP.containsKey(identificador)){
+            exist=true;
         }
-        catch (IndexOutOfBoundsException e){
-            return false;
-        }
-
+        return exist;
     }
-
 
     /**
      * Método que retorna una lista con todos los BookItem en la base de datos
-     * @return ArrayList<BookItem>
+     *@return List<BookItem>
      */
-    public static ArrayList<com.pla1.cifo.ahuesoa.pac1.model.BookItem> getBooks(){
-        return (ArrayList<com.pla1.cifo.ahuesoa.pac1.model.BookItem>) com.pla1.cifo.ahuesoa.pac1.model.BookItem.listAll(com.pla1.cifo.ahuesoa.pac1.model.BookItem.class);
+    public static List<BookItem> getBooks(){
+
+    return BOOKS;
     }
+
 }
