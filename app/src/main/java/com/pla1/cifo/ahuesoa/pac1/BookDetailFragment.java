@@ -14,6 +14,8 @@ import com.pla1.cifo.ahuesoa.pac1.model.BookContent;
 import com.squareup.picasso.Picasso;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.pla1.cifo.ahuesoa.pac1.model.BookItem;
 
@@ -55,10 +57,7 @@ public class BookDetailFragment extends Fragment {
      */
     private BookItem mItem;
 
-    /**
-     * Libros locales
-     */
-    private BookContent books;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -76,10 +75,12 @@ public class BookDetailFragment extends Fragment {
             // to load content from a content provider.
             //mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
 
-            //Obtenemos los argumentos pasados al fragmento desde otra actividad, los datos de cada libro
+            //Obtenemos los argumentos pasados al fragmento desde otra actividad, el id del libro
             int id=Integer.parseInt(getArguments().getString(ARG_ITEM_ID));
 
-             mItem=BookContent.BOOKS_MAP.get(id);
+            //Obtenemos el libro
+             mItem=BookContent.BOOKS_MAP.get(Integer.toString(id));
+
             /*
             String title=getArguments().getString(ARG_ITEM_TITLE);
             String description=getArguments().getString(ARG_ITEM_DESCRIPTION);
