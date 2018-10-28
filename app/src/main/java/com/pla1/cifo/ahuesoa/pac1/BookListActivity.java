@@ -83,7 +83,7 @@ public class BookListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_book_list);
 
         //Actualizamos bookLocals con los libros de la base de datos local
-        bookLocals=Funciones.toBookContent(BookItem.listAll(BookItem.class));
+        bookLocals= (new BookContent()).BookContent();
 
         //Cargamos el swipe_container
         swipeContainer= (SwipeRefreshLayout) findViewById(R.id.swipeContainer);

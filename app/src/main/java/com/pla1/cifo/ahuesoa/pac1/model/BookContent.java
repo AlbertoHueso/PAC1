@@ -1,5 +1,7 @@
 package com.pla1.cifo.ahuesoa.pac1.model;
 
+import com.pla1.cifo.ahuesoa.pac1.Funciones;
+
 import java.util.ArrayList;
 
 /**
@@ -8,11 +10,15 @@ import java.util.ArrayList;
  */
 public class BookContent<BookItem> extends ArrayList {
 
-    /*
-    Constructor
+
+    /**
+     * Método que obtiene un BookContent con los datos en local
+     * @return
      */
-    public BookContent() {
-        super();
+    public BookContent BookContent() {
+
+       BookContent myBooks=Funciones.toBookContent(com.pla1.cifo.ahuesoa.pac1.model.BookItem.listAll(com.pla1.cifo.ahuesoa.pac1.model.BookItem.class));
+        return myBooks;
     }
 
 
