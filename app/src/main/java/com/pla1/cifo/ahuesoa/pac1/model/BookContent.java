@@ -1,9 +1,6 @@
-package model;
-
-import com.pla1.cifo.ahuesoa.pac1.BookListActivity;
+package com.pla1.cifo.ahuesoa.pac1.model;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Clase que representa el conjunto de libros
@@ -27,11 +24,11 @@ public class BookContent<BookItem> extends ArrayList {
      * @param bookItem
      * @return Boolean que dice si está o no
      */
-    public  boolean exists(model.BookItem bookItem){
+    public  boolean exists(com.pla1.cifo.ahuesoa.pac1.model.BookItem bookItem){
         int index=bookItem.getIdentificador();
-        model.BookItem myBook;
+        com.pla1.cifo.ahuesoa.pac1.model.BookItem myBook;
         try{
-           myBook=(model.BookItem) this.get(index);
+           myBook=(com.pla1.cifo.ahuesoa.pac1.model.BookItem) this.get(index);
 
            //Coinciden los identificadores, devuelve true, en el resto de casos false
            if (myBook.getIdentificador()==bookItem.getIdentificador()){
@@ -50,9 +47,9 @@ public class BookContent<BookItem> extends ArrayList {
 
     /**
      * Método que retorna una lista con todos los BookItem en la base de datos
-     * @return ArrayList<model.BookItem>
+     * @return ArrayList<BookItem>
      */
-    public static ArrayList<model.BookItem> getBooks(){
-        return (ArrayList<model.BookItem>)model.BookItem.listAll(model.BookItem.class);
+    public static ArrayList<com.pla1.cifo.ahuesoa.pac1.model.BookItem> getBooks(){
+        return (ArrayList<com.pla1.cifo.ahuesoa.pac1.model.BookItem>) com.pla1.cifo.ahuesoa.pac1.model.BookItem.listAll(com.pla1.cifo.ahuesoa.pac1.model.BookItem.class);
     }
 }

@@ -14,7 +14,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 
-import model.BookItem;
+import com.pla1.cifo.ahuesoa.pac1.model.BookItem;
 
 
 /**

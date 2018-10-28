@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import model.BookItem;
+import com.pla1.cifo.ahuesoa.pac1.model.BookItem;
 
 /**
  * Helper class for providing sample content for user interfaces created by

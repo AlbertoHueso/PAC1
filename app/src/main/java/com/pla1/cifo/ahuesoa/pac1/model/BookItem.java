@@ -1,4 +1,4 @@
-package model;
+package com.pla1.cifo.ahuesoa.pac1.model;
 
 import com.orm.SugarRecord;
 import com.pla1.cifo.ahuesoa.pac1.Funciones;

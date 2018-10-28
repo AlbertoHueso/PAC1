@@ -1,5 +1,4 @@
 package com.pla1.cifo.ahuesoa.pac1;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -27,12 +26,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import model.BookContent;
-import model.BookItem;
+import com.pla1.cifo.ahuesoa.pac1.model.BookContent;
+import com.pla1.cifo.ahuesoa.pac1.model.BookItem;
 
 /**
  * Actividad que intenta conectar con la base de datos de Firebase,

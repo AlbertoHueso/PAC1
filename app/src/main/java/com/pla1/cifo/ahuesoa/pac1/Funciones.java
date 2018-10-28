@@ -7,8 +7,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import model.BookContent;
-import model.BookItem;
+import com.pla1.cifo.ahuesoa.pac1.model.BookContent;
+import com.pla1.cifo.ahuesoa.pac1.model.BookItem;
 
 /**
  * Clase para guardar algunas funciones que se utilizarán en diferentes clases
