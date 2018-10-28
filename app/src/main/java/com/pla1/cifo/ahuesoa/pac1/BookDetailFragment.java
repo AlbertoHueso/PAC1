@@ -32,26 +32,7 @@ public class BookDetailFragment extends Fragment {
      * El argumento del fragmento representando el identificador del libro del fragmento
      */
     public static final String ARG_ITEM_ID = "item_id";
-    /**
-     * El argumento del fragmento representando el título del libro del fragmento
-     */
-    public static final String ARG_ITEM_TITLE = "item_title";
-    /**
-     * El argumento del fragmento representando el autor del libro del fragmento
-     */
-    public static final String ARG_ITEM_AUTHOR = "item_author";
-    /**
-     * El argumento del fragmento representando la descripción del libro del fragmento
-     */
-    public static final String ARG_ITEM_DESCRIPTION = "item_description";
-    /**
-     * El argumento del fragmento representando la url de la imagen del libro del fragmento
-     */
-    public static final String ARG_ITEM_URL_IMAGE = "item_url_image";
-    /**
-     * El argumento del fragmento representando la fecha de publicación del libro del fragmento
-     */
-    public static final String ARG_ITEM_PUBLICATION_DATE = "item_publication_date";
+
 
     /**
      * El libro que se va a representar
