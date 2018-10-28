@@ -80,6 +80,8 @@ public class BookListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
 
+        //Llenamos el BookContent con los libros de la memoria local
+        BookContent.fillLocalBooks();
 
         //Cargamos el swipe_container
         swipeContainer= (SwipeRefreshLayout) findViewById(R.id.swipeContainer);

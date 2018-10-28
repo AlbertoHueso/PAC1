@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
 import com.pla1.cifo.ahuesoa.pac1.model.BookContent;
 import com.squareup.picasso.Picasso;
 
@@ -81,17 +82,11 @@ public class BookDetailFragment extends Fragment {
             //Obtenemos el libro
              mItem=BookContent.BOOKS_MAP.get(Integer.toString(id));
 
-            /*
-            String title=getArguments().getString(ARG_ITEM_TITLE);
-            String description=getArguments().getString(ARG_ITEM_DESCRIPTION);
-            Date publication_date= Funciones.getDateFromString(getArguments().getString(ARG_ITEM_PUBLICATION_DATE));
-            String author= getArguments().getString(ARG_ITEM_AUTHOR);
-            String url_image=getArguments().getString(ARG_ITEM_URL_IMAGE);
-
-         ;
-            //Creamos el nuevo elemento BookItem
-            mItem=new BookItem(title,author,publication_date,description,url_image);
-            */
+             //Si es nulo tratamos de obtenerlo en el DummyContent
+             if (mItem==null){
+                 mItem=DummyContent.ITEM_MAP.get(Integer.toString(id));
+             }
+            
         }
     }
 

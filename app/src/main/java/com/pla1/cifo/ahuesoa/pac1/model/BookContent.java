@@ -5,6 +5,7 @@ import com.pla1.cifo.ahuesoa.pac1.Funciones;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -63,4 +64,23 @@ public class BookContent {
     return BOOKS;
     }
 
+    /**
+     * Método que vacía el BookContent y lo rellena con la base de datos local
+     */
+    public static void fillLocalBooks(){
+        empty();
+    List<BookItem> books=BookItem.listAll(BookItem.class);
+    Iterator<BookItem> it=books.iterator();
+    while (it.hasNext()){
+        BookContent.addBook(it.next());
+        }
+    }
+
+    /**
+     * Mëtodo que vacía el BookContent
+     */
+    public static void empty(){
+        BOOKS.clear();
+        BOOKS_MAP.clear();
+    }
 }
