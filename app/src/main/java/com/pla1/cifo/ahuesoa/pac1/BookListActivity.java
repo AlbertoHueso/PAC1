@@ -37,7 +37,7 @@ import model.BookItem;
 /**
  * Actividad que intenta conectar con la base de datos de Firebase,
  * si lo consigue muestra los libros, si no, muestra los libros en la memoria local SugarOrm
- * Los libros se pueden clickar y abrirán la actividad BookDetailActivity
+ * Los libros se pueden clickar y abrirán la actividad BookDetailActivity o si la pantalla es grande abrirán el fragment bookdetail
  * @see ConexionDatabase
  * @see MyAuthoritation
  * @see BookDetailFragment
@@ -55,10 +55,7 @@ public class BookListActivity extends AppCompatActivity {
      * Variable FirebaseAuth para hacer la autenticacion
      */
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    /*
-     * Guarda si se ha producido la conexión o no
-     */
-    private boolean conexion=false;
+
     /**
      * Variable que guarda los libros cargados en memoria para mostrar
      */
@@ -69,6 +66,9 @@ public class BookListActivity extends AppCompatActivity {
      */
     private BookContent bookLocals;
 
+    /**
+     * Variable que guarda el SwipeRefreshLayout
+     */
     private SwipeRefreshLayout swipeContainer;
 
 
@@ -90,7 +90,7 @@ public class BookListActivity extends AppCompatActivity {
         //Cargamos el swipe_container
         swipeContainer= (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
 
-        //Set del escuchador del refresh
+        //Abrimos el escuchador del SwipeRefresh
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -106,8 +106,7 @@ public class BookListActivity extends AppCompatActivity {
         });
 
 
-        //Obtenemos los datos que se mostrarán en la lista
-        getData();
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -130,6 +129,8 @@ public class BookListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
+        //Obtenemos los datos que se mostrarán en la lista
+        getData();
 
     }
 
@@ -160,7 +161,6 @@ public class BookListActivity extends AppCompatActivity {
 
                     //Añadimos los argumentos que se envían al panel lateral
                     Bundle arguments = new Bundle();
-                    //Pasamos la POSICION como item_ID
                     arguments.putString(BookDetailFragment.ARG_ITEM_ID, Integer.toString(item.getIdentificador()));
                     arguments.putString(BookDetailFragment.ARG_ITEM_TITLE, item.getTitle());
                     arguments.putString(BookDetailFragment.ARG_ITEM_AUTHOR, item.getAuthor());
@@ -313,7 +313,7 @@ public class BookListActivity extends AppCompatActivity {
     }
 
     /**
-     * Método si el libro no está en bookLocals lo añade a este y a la base de datos local     *
+     * Método que si el libro no está en bookLocals lo añade a este y a la base de datos local     *
      * @param books
      */
     public void SaveNewItemsLocally(List<BookItem> books){
@@ -373,7 +373,8 @@ public class BookListActivity extends AppCompatActivity {
      * Clase que realiza la conexión a la base de datos de Firebase
      * Si es cancelado carga en la variable books los libros de la base de datos local
      * Si lo consigue, carga en la variable books los libros de la base de datos en Firebase
-     * Extiende Thread para que sea un hilo propio y así poder retrasarlo independientemente del hilo de la autentificación
+     * Extiende Thread para que sea un hilo propio y así poder retrasarlo independientemente del hilo de la autentificación y dar tiempo a
+     * esta a que se complete
      */
     private class ConexionDatabase extends Thread{
 
@@ -405,15 +406,16 @@ public class BookListActivity extends AppCompatActivity {
          */
         public void run() {
             try {
+
+                //Delay para dar tiempo a que la autenticación se complete
                 Thread.sleep(1500);
-                Log.d("loginEspera","espera");
             }catch (InterruptedException e){
                 System.err.print(e.getMessage());
                 e.printStackTrace();
             }
 
             // Leemos de la base de datos
-            //Abrimos escuchador de eventos
+            //Abrimos escuchador de eventos addValueEvent
             myRef.addValueEventListener(new ValueEventListener() {
 
 
@@ -459,7 +461,7 @@ public class BookListActivity extends AppCompatActivity {
                         //Retiramos el escuchador para evitar interferencias al rotar
                         myRef.removeEventListener(this);
 
-                        //Hay algún problema
+                        //Si hay algún problema
                     } catch (Exception e) {
                         //Cargamos datosLocales
                         showLocalData();
@@ -489,7 +491,7 @@ public class BookListActivity extends AppCompatActivity {
 
     /**
      * Método que comprueba si hay conexión a internet
-     * @return boolean true si la hay false en caso contrario
+     * @return boolean true si la hay, false en caso contrario
      */
     private boolean checkConnection(){
         //Comprobamos si hay conexión a la red
@@ -504,7 +506,7 @@ public class BookListActivity extends AppCompatActivity {
     /**
      * Método que recupera los datos que se mostrarán en la lista
      * Comprueba si hay conexion, pide la autorización y trata de conectarse a la base de datos de Firebase
-     * Si lo consigue muestra los datos obtenidos en red, si no muestra los datos locales     *
+     * Si lo consigue muestra los datos obtenidos en red, si no muestra los datos locales 
      */
     private void getData(){
         //Comprobamos si hay conexión
