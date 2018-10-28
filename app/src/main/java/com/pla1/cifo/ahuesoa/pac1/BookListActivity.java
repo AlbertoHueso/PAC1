@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -61,13 +62,14 @@ public class BookListActivity extends AppCompatActivity {
     /**
      * Variable que guarda los libros cargados en memoria para mostrar
      */
-    BookContent books=null;
+    private BookContent books=null;
 
     /**
      * Variable que guarda los libros en local, si existen
      */
-    BookContent bookLocals;
+    private BookContent bookLocals;
 
+    private SwipeRefreshLayout swipeContainer;
 
 
 
@@ -78,46 +80,34 @@ public class BookListActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
 
         //Actualizamos bookLocals con los libros de la base de datos local
         bookLocals=Funciones.toBookContent(BookItem.listAll(BookItem.class));
 
+        //Cargamos el swipe_container
+        swipeContainer= (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
 
-        //Comprobamos si hay conexión a la red
-        ConnectivityManager cm =
-                (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        boolean isConnected = activeNetwork != null &&
-                activeNetwork.isConnectedOrConnecting();
+        //Set del escuchador del refresh
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeContainer.setOnRefreshListener(this);
+                Toast toast = Toast.makeText(getApplicationContext(), "RELOAD", Toast.LENGTH_LONG);
+                toast.show();
+                getData();
+                swipeContainer.setRefreshing(false);
 
-        //Si está conectado se trata de autorizar y leer la base de datos
-        if(isConnected) {
-
-
-            //Tratamos de autorizar con un email y passwords
-            String email = "who1@car.es";
-            String password = "whoreallycares";
-
-            //Autorizamos
-            MyAuthoritation co = new MyAuthoritation(email, password, this);
-            co.start();
-
-            //Conectamos a la base de datos
-            ConexionDatabase conexionDatabase=new ConexionDatabase();
-            conexionDatabase.start();
-        }
+            }
 
 
-        //No conectado a la red, se muestran datos locales
-        else {
-            showLocalData();
-
-        }
+        });
 
 
+        //Obtenemos los datos que se mostrarán en la lista
+        getData();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -450,9 +440,15 @@ public class BookListActivity extends AppCompatActivity {
                         //Cargamos los libros en la actividad
                         loadItemList(books);
 
+                        //Asignamos los colores del fondo cuando hay red
+                        findViewById(R.id.frameLayout).setBackgroundColor(Color.parseColor("#EEEEEE"));
+                        findViewById(R.id.item_list).setBackgroundColor(Color.parseColor("#EEEEEE"));
+
                         //Mensaje informativo
                         Toast toast = Toast.makeText(getApplicationContext(), "CONNECTED TO EXTERNAL DATABASE\nREADING FROM FIREBASE DATABASE", Toast.LENGTH_LONG);
                         toast.show();
+
+
 
                         //Actualizamos los identificadores, ya que desde Firebase vienen todos a 0
                         updateIdentificators(books);
@@ -489,5 +485,52 @@ public class BookListActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    /**
+     * Método que comprueba si hay conexión a internet
+     * @return boolean true si la hay false en caso contrario
+     */
+    private boolean checkConnection(){
+        //Comprobamos si hay conexión a la red
+        ConnectivityManager cm =
+                (ConnectivityManager)getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        boolean isConnected = activeNetwork != null &&
+                activeNetwork.isConnectedOrConnecting();
+        return isConnected;
+    }
+
+    /**
+     * Método que recupera los datos que se mostrarán en la lista
+     * Comprueba si hay conexion, pide la autorización y trata de conectarse a la base de datos de Firebase
+     * Si lo consigue muestra los datos obtenidos en red, si no muestra los datos locales     *
+     */
+    private void getData(){
+        //Comprobamos si hay conexión
+        boolean isConnected=checkConnection();
+        //Si está conectado se trata de autorizar y leer la base de datos
+        if(isConnected) {
+
+
+            //Tratamos de autorizar con un email y passwords
+            String email = "who1@car.es";
+            String password = "whoreallycares";
+
+            //Autorizamos
+            MyAuthoritation co = new MyAuthoritation(email, password, this);
+            co.start();
+
+            //Conectamos a la base de datos
+            ConexionDatabase conexionDatabase=new ConexionDatabase();
+            conexionDatabase.start();
+        }
+
+
+        //No conectado a la red, se muestran datos locales
+        else {
+            showLocalData();
+
+        }
     }
 }
