@@ -18,6 +18,7 @@ import com.google.firebase.messaging.RemoteMessage;
  */
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgService";
+    private static final String CHANNEL1="CHANNEL1";
     /**
      * Método llamado cuando se recibe un mensaje remoto
      *
@@ -39,7 +40,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT);
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,CHANNEL1)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle("Ejemplo Firebase")
                 .setContentText(messageBody)
