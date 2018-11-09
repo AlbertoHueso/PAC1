@@ -57,11 +57,26 @@ public class BookDetailFragment extends Fragment {
             // to load content from a content provider.
             //mItem = DummyContent.ITEM_MAP.get(getArguments().getString(ARG_ITEM_ID));
 
-            //Obtenemos los argumentos pasados al fragmento desde otra actividad, el id del libro
-            int id=Integer.parseInt(getArguments().getString(ARG_ITEM_ID));
+            //Asignamos el id por defecto del primer libro añadido en BookContent
+            int id=0;
+            try {
+                //Obtenemos los argumentos pasados al fragmento desde otra actividad, el id del libro
+                 id = Integer.parseInt(getArguments().getString(ARG_ITEM_ID));
+                //Obtenemos el libro
+                mItem=BookContent.BOOKS_MAP.get(Integer.toString(id));
+            }
+            catch (RuntimeException e){
+                e.printStackTrace();
+                //Asignamos el primer libro del BookContent
+                try {
+                    mItem = BookContent.getBooks().get(0);
+                }catch (RuntimeException e2){
+                    e2.printStackTrace();
+                    mItem=null;
 
-            //Obtenemos el libro
-             mItem=BookContent.BOOKS_MAP.get(Integer.toString(id));
+                }
+            }
+
 
              //Si es nulo tratamos de obtenerlo en el DummyContent
              if (mItem==null){
@@ -98,6 +113,15 @@ public class BookDetailFragment extends Fragment {
 
         }
 
+        else {
+            try {
+                //Hacemos que sea el primer libro del BookContent
+                mItem = BookContent.getBooks().get(0);
+            }
+            catch (RuntimeException e){
+                e.printStackTrace();
+            }
+        }
 
         Activity activity = this.getActivity();
         CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);

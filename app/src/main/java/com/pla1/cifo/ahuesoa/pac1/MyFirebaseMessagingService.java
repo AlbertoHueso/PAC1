@@ -41,24 +41,33 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 // Intent que se mostrará al pulsar en la acción de la notificación
 
-        Intent intent = new Intent(this, BookListActivity.class);
-        intent.setAction("android.intent.action.DELETE");
-        PendingIntent borrarIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
-        Intent intent2 = new Intent(this, BookListActivity.class);
-        intent2.setAction("android.intent.action.RESEND");
-        PendingIntent resendIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent2, 0);
+        Intent intentDelete = new Intent(this, BookListActivity.class);
+        intentDelete.setAction(Intent.ACTION_DELETE);
+        PendingIntent deleteIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intentDelete, 0);
+        Intent intentView = new Intent(this, BookDetailActivity.class);
+        intentView.setAction(Intent.ACTION_VIEW);
+        PendingIntent detailIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intentView, 0);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this, CHANNEL1)
+                        
 
-                        .setContentTitle("Mi primera notificación")
-                        .setContentText("Hola mundo")
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText("Estos son los detalles expandidos " +
-                                "de la notificacion anterior, aquí se puede escribir más texto"))
+                        .setContentTitle("Action required")
+                        .setContentText(messageBody)//Recuperamos el texto enviado en a notificacion
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText("Now you can delete one book from Local Database " +
+                                "\nor you can show a book added to Local Database"))
 
-                        .addAction(new NotificationCompat.Action(R.drawable.notification,"Borrar", borrarIntent))
-                        .addAction(new NotificationCompat.Action(R.drawable.notification, "Reenviar", resendIntent));
+                        //El icono lo ponemos como 0 para que no se despliegue, de todos modos, desde
+                        //Nugat la mayoría de dispositivos no muestran el icono
+                        .addAction(new NotificationCompat.Action(0,"Delete last book", deleteIntent))
+                        .addAction(new NotificationCompat.Action(0, "Display detail last book", detailIntent))
+                        .setAutoCancel(true) //Borrar notificación después de pulsar sobre ella
+                        .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(), 0));
+
+
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        //Seleccionamos el icono
         mBuilder.setSmallIcon(R.drawable.notification);
 // Mostrar la notificación
         mNotificationManager.notify(0, mBuilder.build());
