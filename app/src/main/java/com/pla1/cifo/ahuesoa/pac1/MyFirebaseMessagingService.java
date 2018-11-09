@@ -18,7 +18,8 @@ import com.google.firebase.messaging.RemoteMessage;
  */
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMsgService";
-    private static final String CHANNEL1="CHANNEL1";
+    private static final String CHANNEL1 = "CHANNEL1";
+
     /**
      * Método llamado cuando se recibe un mensaje remoto
      *
@@ -29,25 +30,37 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 // Mostrar una notificación al recibir un mensaje de Firebase
         sendNotification(remoteMessage.getNotification().getBody());
     }
+
     /**
      * Crea y muestra una notificación al recibir un mensaje de Firebase
      *
      * @param messageBody Texto a mostrar en la notificación
      */
     private void sendNotification(String messageBody) {
+
+
+// Intent que se mostrará al pulsar en la acción de la notificación
+
         Intent intent = new Intent(this, BookListActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this,CHANNEL1)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("Ejemplo Firebase")
-                .setContentText(messageBody)
-                .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
-        NotificationManager notificationManager =
+        intent.setAction("android.intent.action.DELETE");
+        PendingIntent borrarIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent, 0);
+        Intent intent2 = new Intent(this, BookListActivity.class);
+        intent2.setAction("android.intent.action.RESEND");
+        PendingIntent resendIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intent2, 0);
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(this, CHANNEL1)
+
+                        .setContentTitle("Mi primera notificación")
+                        .setContentText("Hola mundo")
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText("Estos son los detalles expandidos " +
+                                "de la notificacion anterior, aquí se puede escribir más texto"))
+
+                        .addAction(new NotificationCompat.Action(R.drawable.notification,"Borrar", borrarIntent))
+                        .addAction(new NotificationCompat.Action(R.drawable.notification, "Reenviar", resendIntent));
+        NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(0, notificationBuilder.build());}
+        mBuilder.setSmallIcon(R.drawable.notification);
+// Mostrar la notificación
+        mNotificationManager.notify(0, mBuilder.build());
+    }
 }
