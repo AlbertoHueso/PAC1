@@ -49,7 +49,7 @@ public class BookContent {
      */
     public static boolean exists(BookItem bookItem){
         boolean exist=false;
-      Set<String> a=BOOKS_MAP.keySet();
+
         int identificador=bookItem.getIdentificador();
         if (BOOKS_MAP.containsKey(Integer.toString(identificador))){
             exist=true;

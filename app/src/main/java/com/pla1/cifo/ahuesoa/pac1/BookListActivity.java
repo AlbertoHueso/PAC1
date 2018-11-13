@@ -82,14 +82,14 @@ public class BookListActivity extends AppCompatActivity {
 
         if (getIntent() != null && getIntent().getAction() != null) {
             if (getIntent().getAction().equalsIgnoreCase(Intent.ACTION_DELETE)) {
-// Acción eliminar de la notificación recibida
+               String a=getIntent().getExtras().get("position").toString();
+               Log.d("recuperada",a);
+            // Acción eliminar de la notificación recibida
                 Toast.makeText(this, "Acción eliminar", Toast.LENGTH_SHORT).show();
             }
         }
 
-
-
-        //Llenamos el BookContent con los libros de la memoria local
+                //Llenamos el BookContent con los libros de la memoria local
         BookContent.fillLocalBooks();
 
         //Cargamos el swipe_container

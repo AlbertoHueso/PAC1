@@ -4,8 +4,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -29,6 +27,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
 // Mostrar una notificación al recibir un mensaje de Firebase
         sendNotification(remoteMessage.getNotification().getBody());
+
     }
 
     /**
@@ -41,12 +40,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 // Intent que se mostrará al pulsar en la acción de la notificación
 
+        //Creamos un intent para abrir la actividad principal BookListActivity
         Intent intentDelete = new Intent(this, BookListActivity.class);
         intentDelete.setAction(Intent.ACTION_DELETE);
+        intentDelete.putExtra("position",6);
         PendingIntent deleteIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intentDelete, 0);
+
+        //Creamos un intent para abrir la actividad de BookDetailActivity
         Intent intentView = new Intent(this, BookDetailActivity.class);
         intentView.setAction(Intent.ACTION_VIEW);
+
         PendingIntent detailIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intentView, 0);
+
+
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(this, CHANNEL1)
                         
