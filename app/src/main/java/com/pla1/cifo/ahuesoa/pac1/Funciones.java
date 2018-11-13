@@ -59,5 +59,9 @@ public class Funciones {
         }
         return books;
     }*/
+    public static void deleteFromLocalDB(int position){
+     List<BookItem> a=  BookItem.listAll(BookItem.class);
+     BookItem.delete(a.get(position));
 
+    }
 }

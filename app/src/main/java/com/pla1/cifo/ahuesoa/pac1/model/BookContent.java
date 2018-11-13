@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Clase que representa el conjunto de libros
@@ -48,8 +49,9 @@ public class BookContent {
      */
     public static boolean exists(BookItem bookItem){
         boolean exist=false;
+      Set<String> a=BOOKS_MAP.keySet();
         int identificador=bookItem.getIdentificador();
-        if (BOOKS_MAP.containsKey(identificador)){
+        if (BOOKS_MAP.containsKey(Integer.toString(identificador))){
             exist=true;
         }
         return exist;

@@ -87,6 +87,8 @@ public class BookListActivity extends AppCompatActivity {
             }
         }
 
+
+
         //Llenamos el BookContent con los libros de la memoria local
         BookContent.fillLocalBooks();
 
@@ -352,7 +354,8 @@ public class BookListActivity extends AppCompatActivity {
           if(BookContent.getBooks().size()>0) {
               Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION TO EXTERNAL DATABASE\nREADING LOCAL DATA", Toast.LENGTH_LONG);
               toast.show();
-              loadItemList(BookContent.getBooks());
+              List<BookItem> a = BookContent.getBooks();
+              loadItemList(a);
 
            //No hay libros cargados en bookLocals, se muestra el contenido Dummy
           }else {
