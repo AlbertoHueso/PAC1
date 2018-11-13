@@ -80,6 +80,13 @@ public class BookListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
 
+        if (getIntent() != null && getIntent().getAction() != null) {
+            if (getIntent().getAction().equalsIgnoreCase(Intent.ACTION_DELETE)) {
+// Acción eliminar de la notificación recibida
+                Toast.makeText(this, "Acción eliminar", Toast.LENGTH_SHORT).show();
+            }
+        }
+
         //Llenamos el BookContent con los libros de la memoria local
         BookContent.fillLocalBooks();
 
@@ -292,7 +299,7 @@ public class BookListActivity extends AppCompatActivity {
             BookItem book= it.next();
             //Se actualizan los identificadores
             book.setIdentificador(book.getIdHash());
-            book.setId((long)book.getIdentificador());
+
 
 
         }
