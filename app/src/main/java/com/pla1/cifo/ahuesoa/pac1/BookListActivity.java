@@ -18,13 +18,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -88,11 +93,16 @@ public class BookListActivity extends AppCompatActivity {
 
         if (getIntent() != null && getIntent().getAction() != null) {
             if (getIntent().getAction().equalsIgnoreCase(Intent.ACTION_DELETE)) {
-                String a=getIntent().getExtras().get("position").toString();
-                Log.d("recuperada",a);
+                //Recuperamos la posicion para eliminar
+               Integer posicion=(Integer) getIntent().getExtras().get("position");
+               //Eliminamos la posicion indicada
+                BookItem book=BookContent.getBooks().get(posicion);
+
+                Funciones.deleteFromLocalDB(posicion);
                 // Acción eliminar de la notificación recibida
-                Toast.makeText(this, "Acción eliminar", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Eliminado libro de la base de datos local:\n"+book.getTitle()+"\n"+book.getAuthor(), Toast.LENGTH_SHORT).show();
             }
+
         }
 
         //Llenamos el BookContent con los libros de la memoria local
@@ -142,6 +152,14 @@ public class BookListActivity extends AppCompatActivity {
 
         //Obtenemos los datos que se mostrarán en la lista
         getData();
+
+
+       String  a=FirebaseInstanceId.getInstance().getToken();
+        //Mostramos el token obtenido para poder enviar mensajes solo a este dispositivo
+        Log.d("tokenObtenido", a);
+
+
+
 
     }
 
