@@ -29,6 +29,8 @@ import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import com.pla1.cifo.ahuesoa.pac1.model.BookContent;
 import com.pla1.cifo.ahuesoa.pac1.model.BookItem;
@@ -43,6 +45,10 @@ import com.pla1.cifo.ahuesoa.pac1.model.BookItem;
  * @see BookDetailFragment
  */
 public class BookListActivity extends AppCompatActivity {
+
+    private static final String EMAIL = "who1@car.es";
+    private static final String PASSWORD = "whoreallycares";
+    private static final Long DELAY=1800l;
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -66,7 +72,7 @@ public class BookListActivity extends AppCompatActivity {
      * Variable que guarda el SwipeRefreshLayout
      */
     private SwipeRefreshLayout swipeContainer;
-
+    private MyAuthoritation authoritation;
 
 
     @Override
@@ -82,14 +88,14 @@ public class BookListActivity extends AppCompatActivity {
 
         if (getIntent() != null && getIntent().getAction() != null) {
             if (getIntent().getAction().equalsIgnoreCase(Intent.ACTION_DELETE)) {
-               String a=getIntent().getExtras().get("position").toString();
-               Log.d("recuperada",a);
-            // Acción eliminar de la notificación recibida
+                String a=getIntent().getExtras().get("position").toString();
+                Log.d("recuperada",a);
+                // Acción eliminar de la notificación recibida
                 Toast.makeText(this, "Acción eliminar", Toast.LENGTH_SHORT).show();
             }
         }
 
-                //Llenamos el BookContent con los libros de la memoria local
+        //Llenamos el BookContent con los libros de la memoria local
         BookContent.fillLocalBooks();
 
         //Cargamos el swipe_container
@@ -350,30 +356,28 @@ public class BookListActivity extends AppCompatActivity {
             toast.show();
 
         }else {
-          //Hay datos locales y hay libros cargados en bookLocals, se muestran
-          if(BookContent.getBooks().size()>0) {
-              Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION TO EXTERNAL DATABASE\nREADING LOCAL DATA", Toast.LENGTH_LONG);
-              toast.show();
-              List<BookItem> a = BookContent.getBooks();
-              loadItemList(a);
+            //Hay datos locales y hay libros cargados en bookLocals, se muestran
+            if(BookContent.getBooks().size()>0) {
+                Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION TO EXTERNAL DATABASE\nREADING LOCAL DATA", Toast.LENGTH_LONG);
+                toast.show();
+                List<BookItem> a = BookContent.getBooks();
+                loadItemList(a);
 
-           //No hay libros cargados en bookLocals, se muestra el contenido Dummy
-          }else {
-              loadItemList(DummyContent.ITEMS);
-              Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION TO EXTERNAL DATABASE\nNO LOCAL DATA\nPLEASE TRY AGAIN", Toast.LENGTH_LONG);
-              toast.show();
-          }
+                //No hay libros cargados en bookLocals, se muestra el contenido Dummy
+            }else {
+                loadItemList(DummyContent.ITEMS);
+                Toast toast = Toast.makeText(getApplicationContext(), "NO CONNEXION TO EXTERNAL DATABASE\nNO LOCAL DATA\nPLEASE TRY AGAIN", Toast.LENGTH_LONG);
+                toast.show();
+            }
         }
     }
 
     /**
      * Clase que realiza la conexión a la base de datos de Firebase
      * Si es cancelado carga en la variable books los libros de la base de datos local
-     * Si lo consigue, carga en la variable books los libros de la base de datos en Firebase
-     * Extiende Thread para que sea un hilo propio y así poder retrasarlo independientemente del hilo de la autentificación y dar tiempo a
-     * esta a que se complete
+     * Si lo consigue, carga en la variable books los libros de la base de datos en Firebase     *
      */
-    private class ConexionDatabase extends Thread{
+    private class ConexionDatabase {
 
         /**
          * Base de datos de Firebase
@@ -394,22 +398,16 @@ public class BookListActivity extends AppCompatActivity {
 
         }
 
-        @Override
+
         /**
          * En primer lugar ejecuta una espera de 1500ms
          * Después abre un escuchador para eventos de cambio de datos
          * Si se reciben nuevos datos los carga en books
          * Si hay algún problema carga desde la base de datos local
          */
-        public void run() {
-            try {
+        public void conectDb() {
 
-                //Delay para dar tiempo a que la autenticación se complete
-                Thread.sleep(1500);
-            }catch (InterruptedException e){
-                System.err.print(e.getMessage());
-                e.printStackTrace();
-            }
+
 
             // Leemos de la base de datos
             //Abrimos escuchador de eventos addValueEvent
@@ -502,7 +500,7 @@ public class BookListActivity extends AppCompatActivity {
     /**
      * Método que recupera los datos que se mostrarán en la lista
      * Comprueba si hay conexion, pide la autorización y trata de conectarse a la base de datos de Firebase
-     * Si lo consigue muestra los datos obtenidos en red, si no muestra los datos locales 
+     * Si lo consigue muestra los datos obtenidos en red, si no muestra los datos locales
      */
     private void getData(){
         //Comprobamos si hay conexión
@@ -511,17 +509,46 @@ public class BookListActivity extends AppCompatActivity {
         if(isConnected) {
 
 
-            //Tratamos de autorizar con un email y passwords
-            String email = "who1@car.es";
-            String password = "whoreallycares";
 
-            //Autorizamos
-            MyAuthoritation co = new MyAuthoritation(email, password, this);
-            co.start();
 
-            //Conectamos a la base de datos
-            ConexionDatabase conexionDatabase=new ConexionDatabase();
-            conexionDatabase.start();
+
+            //Autorizamos con un email y password
+            authoritation = new MyAuthoritation(EMAIL, PASSWORD, this);
+            authoritation.authorize();
+
+
+            //Creamos una tarea que tratará de conectar a la base de datos al cumplirse el tiempo fijado en el schedule
+            TimerTask task = new TimerTask() {
+
+                public void run() {
+                    //Si se ha recibido algún resultado de la autorización se intenta la conexión a la base de datos
+                    if (authoritation.getRegistered()!=null){
+                        ConexionDatabase conexionDatabase = new ConexionDatabase();
+                        conexionDatabase.conectDb();
+                    }
+                    //Si no se ha recibido ningún resultado de la autorización se muestran los datos locales
+                    else {
+                        //Volvemos al hilo principal para poder ejecutar showLocalData()
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showLocalData();
+                            }
+                        });
+
+                    }
+                }
+            };
+
+            //Creamos el timer para ejecutar task on el delay de 1800ms
+            Timer timer = new Timer("Timer");
+
+            timer.schedule(task, DELAY);
+
+
+
+
+
         }
 
 
