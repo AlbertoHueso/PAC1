@@ -105,6 +105,46 @@ public class BookListActivity extends AppCompatActivity {
 
         }
 
+        if (getIntent() != null && getIntent().getAction() != null) {
+            if (getIntent().getAction().equalsIgnoreCase(Intent.ACTION_VIEW)) {
+                //Recuperamos la posicion para mostrar el detalle
+                Integer posicion=(Integer) getIntent().getExtras().get("position");
+                Log.d("posicionRecuperada",Integer.toString(posicion));
+
+                Toast.makeText(this, "DETALLE", Toast.LENGTH_SHORT).show();
+
+                BookItem  item=BookContent.getBooks().get(posicion);
+
+                //Caso dos paneles
+                if (mTwoPane) {
+
+
+                    //Añadimos los argumentos que se envían al panel lateral
+                    Bundle arguments = new Bundle();
+                    arguments.putString(BookDetailFragment.ARG_ITEM_ID, Integer.toString(item.getIdentificador()));
+
+
+                    BookDetailFragment fragment = new BookDetailFragment();
+                    fragment.setArguments(arguments);
+                    this.getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.item_detail_container, fragment)
+                            .commit();
+
+                    //Caso un panel
+                } else {
+                    Context context =this.getApplicationContext();
+                    Intent intent = new Intent(context, BookDetailActivity.class);
+
+                    //Añadimos los argumentos que se envían a la nueva actividad
+                    intent.putExtra(BookDetailFragment.ARG_ITEM_ID, Integer.toString(item.getIdentificador()));
+
+                    //Se inicia la nueva actividad
+                    context.startActivity(intent);
+                }
+            }
+
+        }
+
         //Llenamos el BookContent con los libros de la memoria local
         BookContent.fillLocalBooks();
 

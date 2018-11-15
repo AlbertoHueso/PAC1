@@ -47,7 +47,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             //Se asigna una posición igual al tamaño del array con lo que nunca se podrá acceder a esa posición
             position=BookContent.getBooks().size();
         }
-        if (position>=0&&position<BookContent.getBooks().size()-1)
+        if (position>=0&&position<BookContent.getBooks().size())
         sendNotification(remoteMessage.getNotification().getBody());
     }
 
@@ -65,13 +65,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         Intent intentDelete = new Intent(this, BookListActivity.class);
         intentDelete.setAction(Intent.ACTION_DELETE);
         Log.d("posicion2",Integer.toString(position));
+        //Añadimos los datos que se pasan a la nueva actividad
         intentDelete.putExtra("position", position);
         PendingIntent deleteIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intentDelete, 0);
 
         //Creamos un intent para abrir la actividad de BookDetailActivity
-        Intent intentView = new Intent(this, BookDetailActivity.class);
+        Intent intentView = new Intent(this,BookListActivity.class);
         intentView.setAction(Intent.ACTION_VIEW);
-
+        //Añadimos los datos que se pasan a la nueva actividad
+        intentView.putExtra("position", position);
         PendingIntent detailIntent = PendingIntent.getActivity(this, (int) System.currentTimeMillis(), intentView, 0);
 
 
@@ -88,7 +90,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         //El icono lo ponemos como 0 para que no se despliegue, de todos modos, desde
                         //Nugat la mayoría de dispositivos no muestran el icono
                         .addAction(new NotificationCompat.Action(0,"Delete book", deleteIntent))
-                        .addAction(new NotificationCompat.Action(0, "Display detail last book", detailIntent))
+                        .addAction(new NotificationCompat.Action(0, "Display detail book", detailIntent))
                         .setAutoCancel(true) //Borrar notificación después de pulsar sobre ella
                         .setContentIntent(PendingIntent.getActivity(this, 0, new Intent(), 0));
 
