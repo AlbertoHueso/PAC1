@@ -222,7 +222,7 @@ public class BookListActivity extends AppCompatActivity {
 
        String  a=FirebaseInstanceId.getInstance().getToken();
         //Mostramos el token obtenido para poder enviar mensajes solo a este dispositivo
-        Log.d("tokenObtenido", a);
+        //Log.d("tokenObtenido", a);
 
 
 

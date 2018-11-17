@@ -1,9 +1,13 @@
 package com.pla1.cifo.ahuesoa.pac1;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcel;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -33,6 +37,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
 // Mostrar una notificación al recibir un mensaje de Firebase
 
+
         //Recuperamos el par clave valor enviado desde la notifiación
         try {
             //Recuperamos el mensaje enviado
@@ -54,6 +59,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             //Se muestra la notificación
             sendNotification(remoteMessage.getNotification().getBody());
+
+
         }
 
     }
@@ -94,7 +101,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         .setStyle(new NotificationCompat.BigTextStyle().bigText("Now you can delete one book from Local Database " +
                                 "\nor you can show a book added to Local Database"))
 
-
                         //El icono del botón lo ponemos como 0 para que no se despliegue, de todos modos, desde
                         //Nugat la mayoría de dispositivos no muestran el icono del botón
                         .addAction(new NotificationCompat.Action(0,"Delete book", deleteIntent))
@@ -107,8 +113,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         //Seleccionamos el icono personalizado de la notificación
+        //Obtenido de https://romannurik.github.io/AndroidAssetStudio/icons-notification.html
         mBuilder.setSmallIcon(R.drawable.notification);
+
 // Mostrar la notificación
         mNotificationManager.notify(0, mBuilder.build());
+        //Hacemos que vibre
+       vibrar();
+    }
+
+    /**
+     * Método que hace que el móvil vibre
+     */
+    private void vibrar(){
+        Vibrator vibrator=(Vibrator) getSystemService(VIBRATOR_SERVICE);
+
+        //Creamos el patrón de vibración
+        long[] pattern={2000,1000};//sleep 2s y vibra un s
+
+        //Ejecutamos la vibración
+        vibrator.vibrate(pattern, -1); //-1 indica sin repetición
     }
 }
