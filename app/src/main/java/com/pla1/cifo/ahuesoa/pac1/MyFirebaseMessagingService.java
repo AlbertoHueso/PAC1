@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Parcel;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -100,7 +101,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         //Asignamos el texto del botón
                         .setStyle(new NotificationCompat.BigTextStyle().bigText("Now you can delete one book from Local Database " +
                                 "\nor you can show a book added to Local Database"))
-
+                        .setLights(0xFFff0000, 1000, 1000)
                         //El icono del botón lo ponemos como 0 para que no se despliegue, de todos modos, desde
                         //Nugat la mayoría de dispositivos no muestran el icono del botón
                         .addAction(new NotificationCompat.Action(0,"Delete book", deleteIntent))
@@ -114,12 +115,22 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         //Seleccionamos el icono personalizado de la notificación
         //Obtenido de https://romannurik.github.io/AndroidAssetStudio/icons-notification.html
-        mBuilder.setSmallIcon(R.drawable.notification);
+        mBuilder.setSmallIcon(R.drawable.ic_stat_chrome_reader_mode);
 
 // Mostrar la notificación
-        mNotificationManager.notify(0, mBuilder.build());
+         //Creamos la notificación
+         Notification notif=mBuilder.build();
+         //Hacemos que se ilumine el led
+        notif.ledARGB = 0xFFff0000;
+        notif.flags = Notification.FLAG_SHOW_LIGHTS | Notification.FLAG_ONLY_ALERT_ONCE;
+        notif.ledOnMS = 1000;
+        notif.ledOffMS = 1000;
+
+        //Desplegamos la notificación
+        mNotificationManager.notify(0, notif);
         //Hacemos que vibre
-       vibrar();
+         vibrar();
+
     }
 
     /**
@@ -134,4 +145,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         //Ejecutamos la vibración
         vibrator.vibrate(pattern, -1); //-1 indica sin repetición
     }
+
+
 }
