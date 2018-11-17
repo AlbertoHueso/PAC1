@@ -34,21 +34,29 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
 // Mostrar una notificación al recibir un mensaje de Firebase
 
+        //Recuperamos el par clave valor enviado desde la notifiación
         try {
+            //Recuperamos el mensaje enviado
             Map<String, String> a = remoteMessage.getData();
-            Set<String> z = a.keySet();
-            String w=a.get("position");
-            position = Integer.parseInt(a.get("position"));
-            Log.d("posicion1",a.get("position"));
+            //Recuperamos el valor con la clave "book_position"
+            position = Integer.parseInt(a.get("book_position"));
+
 
         }catch (NumberFormatException e) {
             System.err.println(e.getMessage());
             e.printStackTrace();
             //Se asigna una posición igual al tamaño del array con lo que nunca se podrá acceder a esa posición
+            //No se mostrará la notificación
             position=BookContent.getBooks().size();
         }
-        if (position>=0&&position<BookContent.getBooks().size())
-        sendNotification(remoteMessage.getNotification().getBody());
+
+        //La notificación solo se muestra si se obtiene un valor válido para position
+        if (position>=0&&position<BookContent.getBooks().size()) {
+
+            //Se muestra la notificación
+            sendNotification(remoteMessage.getNotification().getBody());
+        }
+
     }
 
     /**

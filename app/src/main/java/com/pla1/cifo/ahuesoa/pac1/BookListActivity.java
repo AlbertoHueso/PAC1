@@ -19,9 +19,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.FirebaseApp;
+
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,7 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
+
 import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -91,17 +91,32 @@ public class BookListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
 
+
+        if (findViewById(R.id.item_detail_container) != null) {
+            // The detail container view will be present only in the
+            // large-screen layouts (res/values-w900dp).
+            // If this view is present, then the
+            // activity should be in two-pane mode.
+            mTwoPane = true;
+        }
+        
         if (getIntent() != null && getIntent().getAction() != null) {
             if (getIntent().getAction().equalsIgnoreCase(Intent.ACTION_DELETE)) {
                 //Recuperamos la posicion para eliminar
                Integer posicion=(Integer) getIntent().getExtras().get("position");
                //Eliminamos la posicion indicada
-                BookItem book=BookContent.getBooks().get(posicion);
+                if (BookContent.getBooks().size()>=0) {
+                    BookItem book = BookContent.getBooks().get(posicion);
 
-                Funciones.deleteFromLocalDB(posicion);
-                // Acción eliminar de la notificación recibida
-                Toast.makeText(this, "Eliminado libro de la base de datos local:\n"+book.getTitle()+"\n"+book.getAuthor(), Toast.LENGTH_SHORT).show();
-            }
+                    Funciones.deleteFromLocalDB(posicion);
+                    // Acción eliminar de la notificación recibida
+                    Toast.makeText(this, "Eliminado libro de la base de datos local:\n" + book.getTitle() + "\n" + book.getAuthor(), Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(this, "NO BOOKS TO ELIMINATE", Toast.LENGTH_SHORT).show();
+
+                }
+                }
 
         }
 
@@ -182,13 +197,7 @@ public class BookListActivity extends AppCompatActivity {
             }
         });
 
-        if (findViewById(R.id.item_detail_container) != null) {
-            // The detail container view will be present only in the
-            // large-screen layouts (res/values-w900dp).
-            // If this view is present, then the
-            // activity should be in two-pane mode.
-            mTwoPane = true;
-        }
+
 
         //Obtenemos los datos que se mostrarán en la lista
         getData();
