@@ -1,4 +1,5 @@
 package com.pla1.cifo.ahuesoa.pac1;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -99,16 +100,26 @@ public class BookListActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
-        
+
         if (getIntent() != null && getIntent().getAction() != null) {
             if (getIntent().getAction().equalsIgnoreCase(Intent.ACTION_DELETE)) {
                 //Recuperamos la posicion para eliminar
                Integer posicion=(Integer) getIntent().getExtras().get("position");
-               //Eliminamos la posicion indicada
+
+
+                //Cancelamos la notificación
+                NotificationManager mNotificationManager =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotificationManager.cancel(0);
+
+
+
+               //Eliminamos el libro de la posicion indicada
                 if (BookContent.getBooks().size()>=0) {
                     BookItem book = BookContent.getBooks().get(posicion);
 
                     Funciones.deleteFromLocalDB(posicion);
+
                     // Acción eliminar de la notificación recibida
                     Toast.makeText(this, "Eliminado libro de la base de datos local:\n" + book.getTitle() + "\n" + book.getAuthor(), Toast.LENGTH_SHORT).show();
                 }
@@ -127,6 +138,12 @@ public class BookListActivity extends AppCompatActivity {
                 Log.d("posicionRecuperada",Integer.toString(posicion));
 
                 Toast.makeText(this, "DETALLE", Toast.LENGTH_SHORT).show();
+
+                //Cancelamos la notificación, es decir, la eliminamos
+                NotificationManager mNotificationManager =
+                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                mNotificationManager.cancel(0);
+
 
                 BookItem  item=BookContent.getBooks().get(posicion);
 

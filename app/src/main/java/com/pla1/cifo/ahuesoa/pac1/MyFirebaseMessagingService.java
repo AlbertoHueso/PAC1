@@ -10,10 +10,9 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.pla1.cifo.ahuesoa.pac1.model.BookContent;
-import com.pla1.cifo.ahuesoa.pac1.model.BookItem;
 
 import java.util.Map;
-import java.util.Set;
+
 
 /**
  * Servicio de mensajes remotos de Firebase
@@ -21,9 +20,9 @@ import java.util.Set;
  * Created by User on 19/06/2016.
  */
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
-    private static final String TAG = "MyFirebaseMsgService";
-    private static final String CHANNEL1 = "CHANNEL1";
 
+    private static final String CHANNEL1 = "CHANNEL1";
+    private static final String KEY_EXPECTED = "book_position";
     private int position;
     /**
      * Método llamado cuando se recibe un mensaje remoto
@@ -38,8 +37,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         try {
             //Recuperamos el mensaje enviado
             Map<String, String> a = remoteMessage.getData();
-            //Recuperamos el valor con la clave "book_position"
-            position = Integer.parseInt(a.get("book_position"));
+            //Recuperamos el valor con la clave que se espera en los mensajes, en este caso "book_position"
+            position = Integer.parseInt(a.get(KEY_EXPECTED));
 
 
         }catch (NumberFormatException e) {
@@ -91,12 +90,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                         .setContentTitle("Action required")
                         .setContentText(messageBody)//Recuperamos el texto enviado en a notificacion
+                        //Asignamos el texto del botón
                         .setStyle(new NotificationCompat.BigTextStyle().bigText("Now you can delete one book from Local Database " +
                                 "\nor you can show a book added to Local Database"))
 
 
-                        //El icono lo ponemos como 0 para que no se despliegue, de todos modos, desde
-                        //Nugat la mayoría de dispositivos no muestran el icono
+                        //El icono del botón lo ponemos como 0 para que no se despliegue, de todos modos, desde
+                        //Nugat la mayoría de dispositivos no muestran el icono del botón
                         .addAction(new NotificationCompat.Action(0,"Delete book", deleteIntent))
                         .addAction(new NotificationCompat.Action(0, "Display detail book", detailIntent))
                         .setAutoCancel(true) //Borrar notificación después de pulsar sobre ella
@@ -106,7 +106,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationManager mNotificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        //Seleccionamos el icono
+        //Seleccionamos el icono personalizado de la notificación
         mBuilder.setSmallIcon(R.drawable.notification);
 // Mostrar la notificación
         mNotificationManager.notify(0, mBuilder.build());
