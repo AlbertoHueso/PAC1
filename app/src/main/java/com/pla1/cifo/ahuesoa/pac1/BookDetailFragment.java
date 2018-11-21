@@ -1,9 +1,9 @@
 package com.pla1.cifo.ahuesoa.pac1;
 
 import android.app.Activity;
-import android.support.design.widget.CollapsingToolbarLayout;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +13,6 @@ import android.widget.TextView;
 import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
 import com.pla1.cifo.ahuesoa.pac1.model.BookContent;
 import com.squareup.picasso.Picasso;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import com.pla1.cifo.ahuesoa.pac1.model.BookItem;
 

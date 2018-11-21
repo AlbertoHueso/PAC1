@@ -1,7 +1,7 @@
 package com.pla1.cifo.ahuesoa.pac1;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
