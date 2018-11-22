@@ -238,7 +238,13 @@ public class BookListActivity extends AppCompatActivity {
         Drawer result = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
-                .withDrawerLayout(R.layout.material_drawer_fits_not)
+
+                /*Con esto y el frame-layout al que se refiere en el book_list se
+                evita que el drawer ocupe la barra de notificaciones
+                https://github.com/mikepenz/MaterialDrawer/blob/develop/FAQ/howto_show_drawer_under_toolbar.md
+                */
+                .withRootView(R.id.drawer_layout)
+
 
                 .addDrawerItems(
                         item1,
