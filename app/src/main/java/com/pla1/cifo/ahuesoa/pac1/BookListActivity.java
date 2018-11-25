@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -231,13 +232,15 @@ public class BookListActivity extends AppCompatActivity {
         getData();
 
 
+        //Creamos un AccountHeader
+        AccountHeader accountHeader=createMyAccount("UserName","UserEmail",this.getResources().getDrawable(R.drawable.profile));
+
         //Creamos el drawer
-        Drawer myDrawer=createmMyDrawer(toolbar);
+        Drawer myDrawer=createmMyDrawer(toolbar,accountHeader);
 
        String  a=FirebaseInstanceId.getInstance().getToken();
         //Mostramos el token obtenido para poder enviar mensajes solo a este dispositivo
         //Log.d("tokenObtenido", a);
-
 
 
 
@@ -658,12 +661,19 @@ public class BookListActivity extends AppCompatActivity {
         }
     }
 
-    private Drawer createmMyDrawer(Toolbar toolbar){
+    /**
+     * Función que a partir de un Toolbar y un AccountHeader crea un Drawer con ese perfil
+     * @param toolbar
+     * @param accountHeader
+     * @return
+     */
+    private Drawer createmMyDrawer(Toolbar toolbar,AccountHeader accountHeader){
 
-        AccountHeader accountHeader=createMyAccount();
         //if you want to update the items at a later time it is recommended to keep it in a variable
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.drawer_item_home);
-        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withIdentifier(2).withName(R.string.drawer_item_settings);
+        PrimaryDrawerItem optionsItem = new PrimaryDrawerItem().withIdentifier(0).withName(R.string.drawer_options);
+        SecondaryDrawerItem shareItem = new SecondaryDrawerItem().withIdentifier(1).withName(R.string.drawer_share_apps);
+        SecondaryDrawerItem copyItem = new SecondaryDrawerItem().withIdentifier(2).withName(R.string.drawer_copy_clipboard);
+        SecondaryDrawerItem sendWhatsappItem = new SecondaryDrawerItem().withIdentifier(3).withName(R.string.drawer_send_whatsapp);
 
         //create the drawer and remember the `Drawer` result object
         Drawer result = new DrawerBuilder()
@@ -682,10 +692,12 @@ public class BookListActivity extends AppCompatActivity {
 
                 .withAccountHeader(accountHeader)
                 .addDrawerItems(
-                        item1,
+                        optionsItem,
                         new DividerDrawerItem(),
-                        item2,
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_settings)
+                        shareItem,
+                        copyItem,
+                        sendWhatsappItem
+
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -698,14 +710,22 @@ public class BookListActivity extends AppCompatActivity {
                 return result;
     }
 
-    public AccountHeader createMyAccount(){
+    /**
+     * Función que crea y retorna un AccountHeader a partir de un nombre, un correo electrónico y un Drawable
+     * @param name
+     * @param email
+     * @param image
+     * @return El accountHeader
+     */
+    public AccountHeader createMyAccount(String name,String email, Drawable image){
+
         // Create the AccountHeader
         AccountHeader headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.drawable.header)
-                .addProfiles(
-                        new ProfileDrawerItem().withName("Mike Penz").withEmail("mikepenz@gmail.com").withIcon(getResources().getDrawable(R.drawable.profile))
+                .addProfiles(new ProfileDrawerItem().withName(name ).withEmail(email).withIcon(image)
                 )
+                .withTextColorRes(R.color.material_drawer_dark_primary_text)
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {

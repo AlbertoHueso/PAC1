@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">PLA4</string>
     <string name="title_item_detail">Item Detail</string>
-    <string name="drawer_item_settings">Drawer settings</string>
-    <string name="drawer_item_home">Drawer home</string>
+    <string name="drawer_options">OPTIONS</string>
+    <string name="drawer_share_apps">Share with other Apps</string>
+    <string name="drawer_copy_clipboard">Copy to clipboard</string>
+    <string name="drawer_send_whatsapp">Send to Whatsapp</string>
 </resources>
