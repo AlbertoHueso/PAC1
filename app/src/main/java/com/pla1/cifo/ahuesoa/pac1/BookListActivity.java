@@ -1,4 +1,5 @@
 package com.pla1.cifo.ahuesoa.pac1;
+import android.accounts.Account;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -31,12 +32,16 @@ import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -226,40 +231,16 @@ public class BookListActivity extends AppCompatActivity {
         getData();
 
 
+        //Creamos el drawer
+        Drawer myDrawer=createmMyDrawer(toolbar);
+
        String  a=FirebaseInstanceId.getInstance().getToken();
         //Mostramos el token obtenido para poder enviar mensajes solo a este dispositivo
         //Log.d("tokenObtenido", a);
 
-        //if you want to update the items at a later time it is recommended to keep it in a variable
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.drawer_item_home);
-        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withIdentifier(2).withName(R.string.drawer_item_settings);
-
-//create the drawer and remember the `Drawer` result object
-        Drawer result = new DrawerBuilder()
-                .withActivity(this)
-                .withToolbar(toolbar)
-
-                /*Con esto y el frame-layout al que se refiere en el book_list se
-                evita que el drawer ocupe la barra de notificaciones
-                https://github.com/mikepenz/MaterialDrawer/blob/develop/FAQ/howto_show_drawer_under_toolbar.md
-                */
-                .withRootView(R.id.drawer_layout)
 
 
-                .addDrawerItems(
-                        item1,
-                        new DividerDrawerItem(),
-                        item2,
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_settings)
-                )
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        // do something with the clicked item :D
-                        return true;
-                    }
-                })
-                .build();
+
 
     }
 
@@ -675,5 +656,63 @@ public class BookListActivity extends AppCompatActivity {
             showLocalData();
 
         }
+    }
+
+    private Drawer createmMyDrawer(Toolbar toolbar){
+
+        AccountHeader accountHeader=createMyAccount();
+        //if you want to update the items at a later time it is recommended to keep it in a variable
+        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.drawer_item_home);
+        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withIdentifier(2).withName(R.string.drawer_item_settings);
+
+        //create the drawer and remember the `Drawer` result object
+        Drawer result = new DrawerBuilder()
+                .withActivity(this)
+                .withToolbar(toolbar)
+                .withActivity(this)
+
+                .withDrawerLayout(R.layout.material_drawer_fits_not)
+
+
+                /*Con esto y el frame-layout al que se refiere en el book_list se
+                evita que el drawer ocupe la barra de notificaciones
+                https://github.com/mikepenz/MaterialDrawer/blob/develop/FAQ/howto_show_drawer_under_toolbar.md
+                */
+                .withRootView(R.id.drawer_layout)
+
+                .withAccountHeader(accountHeader)
+                .addDrawerItems(
+                        item1,
+                        new DividerDrawerItem(),
+                        item2,
+                        new SecondaryDrawerItem().withName(R.string.drawer_item_settings)
+                )
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        // do something with the clicked item :D
+                        return true;
+                    }
+                })
+                .build();
+                return result;
+    }
+
+    public AccountHeader createMyAccount(){
+        // Create the AccountHeader
+        AccountHeader headerResult = new AccountHeaderBuilder()
+                .withActivity(this)
+                .withHeaderBackground(R.drawable.header)
+                .addProfiles(
+                        new ProfileDrawerItem().withName("Mike Penz").withEmail("mikepenz@gmail.com").withIcon(getResources().getDrawable(R.drawable.profile))
+                )
+                .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
+                    @Override
+                    public boolean onProfileChanged(View view, IProfile profile, boolean currentProfile) {
+                        return false;
+                    }
+                })
+                .build();
+        return headerResult;
     }
 }
