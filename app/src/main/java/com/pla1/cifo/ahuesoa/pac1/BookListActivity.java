@@ -711,8 +711,11 @@ public class BookListActivity extends AppCompatActivity {
                                 toast.show();
                                 break;
                             case 1:
-                                toast.setText("SHARE");
-                                toast.show();
+                                Intent sendIntent = new Intent();
+                                sendIntent.setAction(Intent.ACTION_SEND);
+                                sendIntent.putExtra(Intent.EXTRA_TEXT, "Aplicació Android sobre llibres");
+                                sendIntent.setType("text/plain");
+                                startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
                                 break;
 
                             case 2:
