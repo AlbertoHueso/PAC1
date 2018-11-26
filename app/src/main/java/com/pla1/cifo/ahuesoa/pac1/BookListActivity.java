@@ -681,6 +681,7 @@ public class BookListActivity extends AppCompatActivity {
                 .withToolbar(toolbar)
                 .withActivity(this)
 
+
                 .withDrawerLayout(R.layout.material_drawer_fits_not)
 
 
@@ -702,7 +703,31 @@ public class BookListActivity extends AppCompatActivity {
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        // do something with the clicked item :D
+
+                        Toast toast = Toast.makeText(getApplicationContext(), "TEXT", Toast.LENGTH_LONG);
+                        switch ((int) drawerItem.getIdentifier()) {
+                            case 0:
+                                toast.setText("OPTIONS");
+                                toast.show();
+                                break;
+                            case 1:
+                                toast.setText("SHARE");
+                                toast.show();
+                                break;
+
+                            case 2:
+                                toast.setText("COPY");
+                                toast.show();
+                                break;
+                            case 3:
+                                toast.setText("WHATSAPP");
+                                toast.show();
+                                break;
+                            default:
+                                toast.setText("NO ACTION");
+                                toast.show();
+                        }
+
                         return true;
                     }
                 })
