@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -52,6 +53,7 @@ import java.util.TimerTask;
 
 import com.pla1.cifo.ahuesoa.pac1.model.BookContent;
 import com.pla1.cifo.ahuesoa.pac1.model.BookItem;
+import com.squareup.picasso.Picasso;
 
 /**
  * Actividad que intenta conectar con la base de datos de Firebase,
@@ -703,6 +705,9 @@ public class BookListActivity extends AppCompatActivity {
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        Uri imageUri = Uri.parse("android.resource://" + getPackageName()
+                                + "/" + R.mipmap.ic_launcher);
+                        Log.d("imageURI",imageUri.toString());
 
                         Toast toast = Toast.makeText(getApplicationContext(), "TEXT", Toast.LENGTH_LONG);
                         switch ((int) drawerItem.getIdentifier()) {
@@ -714,7 +719,9 @@ public class BookListActivity extends AppCompatActivity {
                                 Intent sendIntent = new Intent();
                                 sendIntent.setAction(Intent.ACTION_SEND);
                                 sendIntent.putExtra(Intent.EXTRA_TEXT, "Aplicació Android sobre llibres");
-                                sendIntent.setType("text/plain");
+                                sendIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+                                sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                sendIntent.setType("image/*");
                                 startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
                                 break;
 
