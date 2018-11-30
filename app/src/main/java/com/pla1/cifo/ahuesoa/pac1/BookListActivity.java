@@ -1,6 +1,7 @@
 package com.pla1.cifo.ahuesoa.pac1;
-import android.accounts.Account;
+import android.content.ClipboardManager;
 import android.app.NotificationManager;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -710,13 +711,14 @@ public class BookListActivity extends AppCompatActivity {
                         Log.d("imageURI",imageUri.toString());
 
                         Toast toast = Toast.makeText(getApplicationContext(), "TEXT", Toast.LENGTH_LONG);
+                        Intent sendIntent = new Intent();
                         switch ((int) drawerItem.getIdentifier()) {
                             case 0:
                                 toast.setText("OPTIONS");
                                 toast.show();
                                 break;
                             case 1:
-                                Intent sendIntent = new Intent();
+
                                 sendIntent.setAction(Intent.ACTION_SEND);
                                 sendIntent.putExtra(Intent.EXTRA_TEXT, "Aplicació Android sobre llibres");
                                 sendIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
@@ -726,16 +728,26 @@ public class BookListActivity extends AppCompatActivity {
                                 break;
 
                             case 2:
-                                toast.setText("COPY");
-                                toast.show();
+                                if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+                                    android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                                    clipboard.setText("prova");
+                                } else {
+                                    android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                                    android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", "prova");
+                                    clipboard.setPrimaryClip(clip);
+                                }
                                 break;
                             case 3:
-                                toast.setText("WHATSAPP");
-                                toast.show();
+                                sendIntent.setPackage("com.whatsapp");
+
                                 break;
                             default:
-                                toast.setText("NO ACTION");
-                                toast.show();
+
+                                sendIntent.putExtra(Intent.EXTRA_TEXT, "Aplicació Android sobre llibres");
+                                sendIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+                                sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                sendIntent.setType("image/*");
+                                sendIntent.setPackage("com.whatsapp");
                         }
 
                         return true;
