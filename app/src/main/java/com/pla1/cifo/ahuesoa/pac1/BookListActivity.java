@@ -721,19 +721,22 @@ public class BookListActivity extends AppCompatActivity {
                         //Seleccionamos una imagen y la preparamos para enviar
                         Drawable drawable = getResources().getDrawable(R.mipmap.ic_launcher);
                         Uri imatgeAEnviar = prepararImatge(drawable);
-
+                        String textAEnviar="Aplicación Android sobre llibres";
                         Toast toast = Toast.makeText(getApplicationContext(), "TEXT", Toast.LENGTH_LONG);
 
+
+                        //Aplicamos una acción diferente a cada cajón, según su identificador
                         switch ((int) drawerItem.getIdentifier()) {
                             case 0:
                                 toast.setText("OPTIONS");
                                 toast.show();
                                 break;
-                            case 1:
+
+                                case 1:
 
                                 Intent shareIntent = new Intent();
                                 shareIntent.setAction(Intent.ACTION_SEND);
-                                shareIntent.putExtra(Intent.EXTRA_TEXT, "Aplicación Android sobre llibres");
+                                shareIntent.putExtra(Intent.EXTRA_TEXT, textAEnviar);
                                 shareIntent.putExtra(Intent.EXTRA_STREAM, imatgeAEnviar);
                                 shareIntent.setType("image/jpeg");
                                 shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
@@ -744,25 +747,36 @@ public class BookListActivity extends AppCompatActivity {
                             case 2:
                                 if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
                                     android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                                    clipboard.setText("prova");
+                                    clipboard.setText(textAEnviar);
                                 } else {
                                     android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                                    android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", "prova");
+                                    android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", textAEnviar);
                                     clipboard.setPrimaryClip(clip);
                                 }
+                                Toast.makeText(getApplicationContext(),"Text copied to clipboard",Toast.LENGTH_SHORT).show();
                                 break;
                             case 3:
                                 Intent shareWhatsappIntent = new Intent();
+
+                                //Asignamos el paquete de Whatsapp para que solo se abra
                                 shareWhatsappIntent.setPackage("com.whatsapp");
-                                shareWhatsappIntent.putExtra(Intent.EXTRA_TEXT, "Aplicación Android sobre llibres");
+                                shareWhatsappIntent.setAction(Intent.ACTION_SEND);
+                                shareWhatsappIntent.putExtra(Intent.EXTRA_TEXT, textAEnviar);
                                 shareWhatsappIntent.putExtra(Intent.EXTRA_STREAM, imatgeAEnviar);
                                 shareWhatsappIntent.setType("image/jpeg");
                                 shareWhatsappIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
+                                //Si está instalado se abre la actividad de Whatsapp, si no, obtenemos un mensaje
+                                try {
+                                    startActivity(shareWhatsappIntent);
+                                } catch (android.content.ActivityNotFoundException ex) {
+
+                                    Toast.makeText(getApplicationContext(),"Whatsap not installed",Toast.LENGTH_SHORT).show();
+                                }
 
                                 break;
                             default:
-
+                                //No hacemos nada
 
 
                         }
