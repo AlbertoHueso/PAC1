@@ -4,6 +4,8 @@ import android.app.NotificationManager;
 import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -11,6 +13,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,6 +49,9 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.pla1.cifo.ahuesoa.pac1.dummy.DummyContent;
+
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -706,12 +712,18 @@ public class BookListActivity extends AppCompatActivity {
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        Uri imageUri = Uri.parse("android.resource://" + getPackageName()
+                        /*Uri imageUri = Uri.parse("android.resource://" + getPackageName()
                                 + "/" + R.mipmap.ic_launcher);
                         Log.d("imageURI",imageUri.toString());
+                        */
+
+
+                        //Seleccionamos una imagen y la preparamos para enviar
+                        Drawable drawable = getResources().getDrawable(R.mipmap.ic_launcher);
+                        Uri imatgeAEnviar = prepararImatge(drawable);
 
                         Toast toast = Toast.makeText(getApplicationContext(), "TEXT", Toast.LENGTH_LONG);
-                        Intent sendIntent = new Intent();
+
                         switch ((int) drawerItem.getIdentifier()) {
                             case 0:
                                 toast.setText("OPTIONS");
@@ -719,12 +731,14 @@ public class BookListActivity extends AppCompatActivity {
                                 break;
                             case 1:
 
-                                sendIntent.setAction(Intent.ACTION_SEND);
-                                sendIntent.putExtra(Intent.EXTRA_TEXT, "Aplicació Android sobre llibres");
-                                sendIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
-                                sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                sendIntent.setType("image/*");
-                                startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
+                                Intent shareIntent = new Intent();
+                                shareIntent.setAction(Intent.ACTION_SEND);
+                                shareIntent.putExtra(Intent.EXTRA_TEXT, "Aplicación Android sobre llibres");
+                                shareIntent.putExtra(Intent.EXTRA_STREAM, imatgeAEnviar);
+                                shareIntent.setType("image/jpeg");
+                                shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                                startActivity(Intent.createChooser(shareIntent, "send"));
+
                                 break;
 
                             case 2:
@@ -738,16 +752,19 @@ public class BookListActivity extends AppCompatActivity {
                                 }
                                 break;
                             case 3:
-                                sendIntent.setPackage("com.whatsapp");
+                                Intent shareWhatsappIntent = new Intent();
+                                shareWhatsappIntent.setPackage("com.whatsapp");
+                                shareWhatsappIntent.putExtra(Intent.EXTRA_TEXT, "Aplicación Android sobre llibres");
+                                shareWhatsappIntent.putExtra(Intent.EXTRA_STREAM, imatgeAEnviar);
+                                shareWhatsappIntent.setType("image/jpeg");
+                                shareWhatsappIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
 
                                 break;
                             default:
 
-                                sendIntent.putExtra(Intent.EXTRA_TEXT, "Aplicació Android sobre llibres");
-                                sendIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
-                                sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                sendIntent.setType("image/*");
-                                sendIntent.setPackage("com.whatsapp");
+
+
                         }
 
                         return true;
@@ -782,4 +799,39 @@ public class BookListActivity extends AppCompatActivity {
                 .build();
         return headerResult;
     }
+
+    /**
+     * Función que a partir de un drawable prepara una imagen susceptible de ser enviada a otras apps
+     * @param drawable
+     * @return Uri con la referencia de la nueva imagen
+     */
+    private Uri prepararImatge(Drawable drawable) {
+
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        //Guardamos la imagen en un fichero temporal temporal
+        File imagePath = new File(getFilesDir(), "temporal");
+        imagePath.mkdir();
+        File imageFile = new File(imagePath.getPath(), "app_icon.png");
+
+
+        //Comprimimos
+        try {
+            FileOutputStream fos = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.flush();
+            fos.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        //Devolvemos la Uri del FileProvider del fichero temporal
+        return FileProvider.getUriForFile(getApplicationContext(), getPackageName()+".fileprovider", imageFile);
+
+    }
+
 }
