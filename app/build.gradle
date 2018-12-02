@@ -40,6 +40,7 @@ dependencies {
     implementation "androidx.annotation:annotation:${versions.androidX}"
     implementation "com.google.android.material:material:${versions.androidX}"
     implementation "androidx.constraintlayout:constraintlayout:${versions.constraintLayout}"
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'

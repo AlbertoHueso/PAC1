@@ -7,4 +7,5 @@
     <string name="drawer_send_whatsapp">Send to Whatsapp</string>
     <string name="send_to">Send TO</string>
     <string name="file_provider_authority">com.pla1.cifo.ahuesoa.pac1.fileprovider</string>
+    <string name="title_activity_web_view">webView</string>
 </resources>

@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.pla1.cifo.ahuesoa.pac1.model.BookContent;
+import com.pla1.cifo.ahuesoa.pac1.model.BookItem;
+
 import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,10 +21,14 @@ import android.view.MenuItem;
  */
 public class BookDetailActivity extends AppCompatActivity {
 
+    private String id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_detail);
+
+        id=getIntent().getStringExtra(BookDetailFragment.ARG_ITEM_ID);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
@@ -29,6 +36,13 @@ public class BookDetailActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Intent intent = new Intent(getApplicationContext(), webView.class);
+                //Añadimos los argumentos que se envían a la nueva actividad
+                intent.putExtra(BookDetailFragment.ARG_ITEM_ID, id);
+
+                //Se inicia la nueva actividad
+                getApplicationContext().startActivity(intent);
                 Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -56,7 +70,7 @@ public class BookDetailActivity extends AppCompatActivity {
             //Se añaden todos los argumentos que se quieren enviar al fragmento
             Bundle arguments = new Bundle();
             arguments.putString(BookDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(BookDetailFragment.ARG_ITEM_ID));
+                    id);
             /*
             arguments.putString(BookDetailFragment.ARG_ITEM_TITLE,
                     getIntent().getStringExtra(BookDetailFragment.ARG_ITEM_TITLE));
