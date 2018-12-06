@@ -3,9 +3,6 @@ package com.pla1.cifo.ahuesoa.pac1;
 import android.content.Intent;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.pla1.cifo.ahuesoa.pac1.model.BookContent;
-import com.pla1.cifo.ahuesoa.pac1.model.BookItem;
 
 import androidx.appcompat.widget.Toolbar;
 import android.view.View;
@@ -37,14 +34,14 @@ public class BookDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(getApplicationContext(), webView.class);
+                Intent intent = new Intent(getApplicationContext(), BuyActivity.class);
                 //Añadimos los argumentos que se envían a la nueva actividad
                 intent.putExtra(BookDetailFragment.ARG_ITEM_ID, id);
 
                 //Se inicia la nueva actividad
                 getApplicationContext().startActivity(intent);
-                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+
+
             }
         });
 

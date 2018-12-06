@@ -60,7 +60,7 @@
         </provider>
 
         <activity
-            android:name=".webView"
+            android:name=".BuyActivity"
             android:label="@string/title_activity_web_view"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>

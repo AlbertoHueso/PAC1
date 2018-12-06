@@ -13,8 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
-public class webView extends AppCompatActivity {
+public class BuyActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,12 +29,36 @@ public class webView extends AppCompatActivity {
         BookItem book=BookContent.BOOKS_MAP.get(id);
         getSupportActionBar().setTitle(book.getTitle());
 
+        WebView myWebView = (WebView) findViewById(R.id.id_webView);
+        WebSettings webSettings = myWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+
+        myWebView.setWebViewClient(new WebViewClient());
+        // Get the Android assets folder path
+        String folderPath = "file:android_asset/";
+
+        // Get the HTML file name
+        String fileName = "form.html";
+
+        // Get the exact file location
+        String file = folderPath + fileName;
+
+         /*
+                    loadUrl(String url)
+                        Loads the given URL.
+                 */
+
+        // Render the HTML file on WebView
+        myWebView.loadUrl(file);
+        
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+
             }
         });
 
