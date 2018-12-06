@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
- <link rel="stylesheet" type="text/css" href="default2.css" />
+ <link rel="stylesheet" type="text/css" href="default.css" />
 </head>
 <body>
 <form>
@@ -16,7 +16,7 @@
   Data caducitat:<br>
   <input type="text" name="date">
   <br>
-  <input type="submit" name="buy">
+  <input type="submit" formaction="/action_page2.php" name="buy">
 </form>
 </body>
 </html>
