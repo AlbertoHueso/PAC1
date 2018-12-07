@@ -1,6 +1,5 @@
 package com.pla1.cifo.ahuesoa.pac1;
 
-
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -15,11 +14,14 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Toast;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BuyActivity extends AppCompatActivity {
+
+    private BookItem book;//Libro que se va a comprar
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +33,7 @@ public class BuyActivity extends AppCompatActivity {
         //Recuperamos los argumentos enviados desde la actividad origen
         String id=getIntent().getStringExtra(BookDetailFragment.ARG_ITEM_ID);
         //Recuperamos el libro indicado por el id
-        BookItem book=BookContent.BOOKS_MAP.get(id);
+         book=BookContent.BOOKS_MAP.get(id);
         //Mostramos en la barra el título del libro
         getSupportActionBar().setTitle(book.getTitle());
 
@@ -49,8 +51,32 @@ public class BuyActivity extends AppCompatActivity {
                     Log.d("thisurl1", getName(url));
                 Log.d("thisurl2", getNumber(url));
                 Log.d("thisurl3", getDate(url));
+                Log.d("thisurl","aquí");
 
-                return true;
+                String name=getName(url);
+                String number=getNumber(url);
+                String date=getDate(url);
+
+                Toast toast;
+
+                //Si todos los campos están rellenados se muestra un mensaje y se vuelve a la actividad anterior
+                //Esta validación de campos es simplemente de prueba, en realidad habría que hacer una validación en el html con javascript y comprobar que los campos fueran correctos
+                if (!name.equals("")&&!number.equals("")&&!date.equals("")){
+
+                    toast = Toast.makeText(getApplicationContext(), "Congratulations!\nYou have bought the book:\n"+book.getTitle(), Toast.LENGTH_LONG);
+                    toast.show();
+                   //Cerramos la actividad y volvemos a la anterior
+                    finish();
+                }else {
+
+                    toast = Toast.makeText(getApplicationContext(), "You need to fullfill alll fields in order to buy the book", Toast.LENGTH_LONG);
+                    toast.show();
+                }
+
+
+
+
+                return false;
             }
         });
         // Obtenemos la ruta del formulario
@@ -87,7 +113,7 @@ public class BuyActivity extends AppCompatActivity {
      * @return String
      */
     private  String getName(String url){
-         String name=inBetween(url,"name=","&");
+         String name= stringInBetween(url,"name=","&");
         return name;
     }
 
@@ -97,7 +123,7 @@ public class BuyActivity extends AppCompatActivity {
      * @return String
      */
     private  String getNumber(String url){
-        String number=inBetween(url,"num=","&");
+        String number= stringInBetween(url,"num=","&");
         return number;
     }
 
@@ -107,7 +133,7 @@ public class BuyActivity extends AppCompatActivity {
      * @return String
      */
     private  String getDate(String url){
-        String date=inBetween(url,"date=","&");
+        String date= stringInBetween(url,"date=","&");
         return date;
     }
 
@@ -119,11 +145,12 @@ public class BuyActivity extends AppCompatActivity {
      * @param pattern2
      * @return String
      */
-    private  String inBetween(String text, String pattern1, String pattern2){
+    private  String stringInBetween(String text, String pattern1, String pattern2){
         String cadena="";
         Pattern p = Pattern.compile(Pattern.quote(pattern1) + "(.*?)" + Pattern.quote(pattern2));
         Matcher m = p.matcher(text);
         while (m.find()) {
+            //Si se ha encontrado un texto entre los dos patrones se asigna a cadena
             cadena=m.group(1);
         }
         return cadena;
